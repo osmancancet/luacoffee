@@ -1,26 +1,172 @@
 @import "tailwindcss";
 
+/* ===== Lua Coffee — koyu / ay temalı palet ===== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0b0b0d;
+  --surface: #141417;
+  --surface-2: #1c1c21;
+  --border: #2a2a30;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --accent: #d4d4d8; /* gümüş-ay */
+  --accent-strong: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-serif {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+/* yıldız tozu arka plan dokusu */
+.starfield {
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 40% 80%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 85% 20%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 10% 70%, rgba(255, 255, 255, 0.35), transparent);
+  background-repeat: repeat;
+  background-size: 400px 400px;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ===== Animasyonlar ===== */
+
+@keyframes lua-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lua-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lua-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes lua-zoom {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes lua-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Sayfa açılışında üstten beliren hero içeriği */
+.anim-fade-up {
+  animation: lua-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-fade-in {
+  animation: lua-fade-in 1s ease both;
+}
+.anim-float {
+  animation: lua-float 6s ease-in-out infinite;
+}
+.anim-zoom {
+  animation: lua-zoom 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-spin-slow {
+  animation: lua-spin-slow 40s linear infinite;
+}
+
+/* Gecikmeli giriş (stagger) için yardımcı sınıflar */
+.delay-1 {
+  animation-delay: 0.08s;
+}
+.delay-2 {
+  animation-delay: 0.16s;
+}
+.delay-3 {
+  animation-delay: 0.24s;
+}
+.delay-4 {
+  animation-delay: 0.32s;
+}
+.delay-5 {
+  animation-delay: 0.4s;
+}
+
+/* Scroll ile beliren öğeler (Reveal bileşeni) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hareket azaltma tercihi olan kullanıcılar için animasyonları kapat */
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-up,
+  .anim-fade-in,
+  .anim-zoom,
+  .anim-float,
+  .anim-spin-slow {
+    animation: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

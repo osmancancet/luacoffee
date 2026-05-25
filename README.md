@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lua Coffee ☕🌙
 
-## Getting Started
+Kahve dükkanı tanıtım sitesi + **QR tabanlı fotoğraf yarışması**. Müşteriler QR
+okutup fotoğraf yükler, admin onaylar, ziyaretçiler oy verir. Next.js + Supabase,
+Vercel'de yayınlanır.
 
-First, run the development server:
+## Hızlı Başlangıç
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # değerleri doldurun
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Supabase Kurulumu
+1. [supabase.com](https://supabase.com) üzerinde yeni proje oluşturun.
+2. **SQL Editor**'da `supabase/migrations/0001_init.sql` dosyasını çalıştırın
+   (tablolar, RLS politikaları, `submissions` storage bucket ve örnek bir yarışma).
+3. **Project Settings → API**'den `NEXT_PUBLIC_SUPABASE_URL`,
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY` ve `service_role` anahtarını alın → `.env.local`.
+4. **Authentication → Users → Add user** ile bir admin e-posta/şifre hesabı ekleyin
+   (admin paneline `/admin`'den giriş için).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Ortam Değişkenleri
+| Değişken | Açıklama |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase proje URL'i |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public anon anahtar |
+| `SUPABASE_SERVICE_ROLE_KEY` | **Gizli** — sadece sunucu, client'a koymayın |
+| `VOTE_SALT` | Oy hash'i için rastgele uzun değer |
+| `NEXT_PUBLIC_SITE_URL` | QR hedefi (lokalde `http://localhost:3000`) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Sayfalar
+- `/` — Ana sayfa  ·  `/menu` — Menü
+- `/yarisma` — Galeri + oylama  ·  `/yarisma/katil` — Katılım (QR hedefi)
+- `/admin` — Yönetim (onay + QR üretici)
 
-## Learn More
+## Vercel Deploy
+Repo'yu Vercel'e bağlayın, ortam değişkenlerini ekleyin (`NEXT_PUBLIC_SITE_URL`'i
+canlı domain yapın) ve deploy edin. Framework otomatik algılanır.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ayrıntılı geliştirici notları için [CLAUDE.md](CLAUDE.md).
