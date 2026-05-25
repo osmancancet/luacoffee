@@ -10,7 +10,8 @@ export async function createServerSupabase() {
   const cookieStore = await cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)!,
     {
       cookies: {
         getAll() {
@@ -38,7 +39,9 @@ export async function createServerSupabase() {
 export function createServiceClient() {
   return createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    // Yeni "secret" anahtar; eski "service_role" anahtarla geriye dönük uyumlu.
+    (process.env.SUPABASE_SECRET_KEY ??
+      process.env.SUPABASE_SERVICE_ROLE_KEY)!,
     { auth: { persistSession: false } },
   );
 }
