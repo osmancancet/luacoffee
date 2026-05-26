@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Camera, Moon, Trophy } from "lucide-react";
+import { Camera, Trophy } from "lucide-react";
+import { PageHeader } from "@/components/PageHeader";
 import { createServiceClient } from "@/lib/supabase/server";
 import { VoteButton } from "@/components/VoteButton";
 import { Reveal } from "@/components/Reveal";
@@ -44,31 +45,29 @@ export default async function YarismaSayfasi() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-16">
-      <header className="text-center">
-        <Moon className="anim-float mx-auto text-[var(--accent)]" size={28} />
-        <h1 className="anim-fade-up delay-1 mt-3 font-serif text-4xl sm:text-5xl">
-          {contest?.baslik ?? "Fotoğraf Yarışması"}
-        </h1>
-        <p className="mx-auto mt-3 max-w-lg text-[var(--muted)]">
-          {contest?.aciklama ??
-            "En sevdiğin kareye oy ver. Her cihaz bir kez oy kullanabilir."}
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <Link
-            href="/yarisma/katil"
-            className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-105"
-          >
-            <Camera size={16} /> Sen de Katıl
-          </Link>
-          <Link
-            href="/yarisma/siralama"
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-6 py-3 text-sm font-medium hover:border-[var(--accent)]"
-          >
-            <Trophy size={16} /> Sıralama
-          </Link>
-        </div>
-      </header>
+    <div className="mx-auto max-w-6xl px-5 py-16 sm:py-24">
+      <PageHeader
+        eyebrow="Fotoğraf Yarışması"
+        baslik={contest?.baslik ?? "Fotoğraf Yarışması"}
+        aciklama={
+          contest?.aciklama ??
+          "En sevdiğin kareye oy ver. Her cihaz bir kez oy kullanabilir."
+        }
+      />
+      <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <Link
+          href="/yarisma/katil"
+          className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-105"
+        >
+          <Camera size={16} /> Sen de Katıl
+        </Link>
+        <Link
+          href="/yarisma/siralama"
+          className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-6 py-3 text-sm font-medium hover:border-[var(--accent)]"
+        >
+          <Trophy size={16} /> Sıralama
+        </Link>
+      </div>
 
       {gonderiler.length === 0 ? (
         <div className="mt-16 rounded-2xl border border-dashed border-[var(--border)] py-20 text-center text-[var(--muted)]">

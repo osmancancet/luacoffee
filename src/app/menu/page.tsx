@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { espressoCoffee, kategoriler } from "@/lib/menu";
 import { fiyat } from "@/lib/utils";
-import { Moon } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
+import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
   title: "Menü — Lua Coffee",
@@ -11,16 +11,12 @@ export const metadata: Metadata = {
 
 export default function MenuSayfasi() {
   return (
-    <div className="mx-auto max-w-5xl px-5 py-16">
-      <header className="text-center">
-        <Moon className="anim-float mx-auto text-[var(--accent)]" size={28} />
-        <h1 className="anim-fade-up delay-1 mt-3 font-serif text-4xl sm:text-5xl">
-          Menü
-        </h1>
-        <p className="anim-fade-up delay-2 mt-3 text-[var(--muted)]">
-          Fiyatlar ₺ cinsindendir.
-        </p>
-      </header>
+    <div className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
+      <PageHeader
+        eyebrow="Menü"
+        baslik="Menü"
+        aciklama="Espresso bazlı klasiklerden imza içeceklerimize. Fiyatlar ₺ cinsindendir."
+      />
 
       {/* Espresso & Coffee — COLD / HOT */}
       <Reveal as="section" className="mt-14">

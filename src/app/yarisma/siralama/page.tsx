@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Camera, Trophy } from "lucide-react";
+import { Camera } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/server";
 import { Leaderboard, type SiraGonderi } from "@/components/Leaderboard";
+import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
   title: "Sıralama — Lua Coffee Yarışması",
@@ -34,18 +35,16 @@ export default async function SiralamaSayfasi() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-16">
-      <header className="text-center">
-        <Trophy className="anim-float mx-auto text-[var(--accent)]" size={30} />
-        <h1 className="anim-fade-up delay-1 mt-3 font-serif text-4xl sm:text-5xl">
-          Sıralama
-        </h1>
-        <p className="anim-fade-up delay-2 mx-auto mt-3 max-w-lg text-[var(--muted)]">
-          {contest?.baslik
+    <div className="mx-auto max-w-3xl px-5 py-16 sm:py-24">
+      <PageHeader
+        eyebrow="Sıralama"
+        baslik="Sıralama"
+        aciklama={
+          contest?.baslik
             ? `${contest.baslik} — en çok oyu toplayan kareler`
-            : "Yarışmanın en çok oyu toplayan kareleri"}
-        </p>
-      </header>
+            : "Yarışmanın en çok oyu toplayan kareleri"
+        }
+      />
 
       <div className="anim-fade-in delay-3 mt-12">
         <Leaderboard initial={gonderiler} />

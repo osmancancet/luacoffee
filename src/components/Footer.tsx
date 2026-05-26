@@ -1,47 +1,82 @@
 import Link from "next/link";
-import { AtSign, MapPin, Clock } from "lucide-react";
+import Image from "next/image";
+import { AtSign, MapPin, Clock, Phone } from "lucide-react";
+import { site } from "@/lib/site";
+
+const kesfet = [
+  { href: "/hakkimizda", etiket: "Hakkımızda" },
+  { href: "/menu", etiket: "Menü" },
+  { href: "/galeri", etiket: "Galeri" },
+  { href: "/etkinlikler", etiket: "Etkinlikler" },
+];
+
+const yarismaLinkleri = [
+  { href: "/yarisma", etiket: "Yarışma" },
+  { href: "/yarisma/siralama", etiket: "Sıralama" },
+  { href: "/yarisma/katil", etiket: "Yarışmaya Katıl" },
+];
 
 export function Footer() {
   return (
     <footer className="border-t border-[var(--border)] bg-[var(--surface)]">
-      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:grid-cols-3">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Marka */}
         <div>
-          <h3 className="font-serif text-xl">Lua Coffee</h3>
-          <p className="mt-2 max-w-xs text-sm text-[var(--muted)]">
-            Ayın altında bir kahve molası. Gece esintili lezzetler, sıcak bir atmosfer.
+          <Link href="/" className="flex items-center gap-2">
+            <span className="relative h-9 w-9 overflow-hidden rounded-full bg-white">
+              <Image src="/logo.png" alt="Lua Coffee" fill className="object-contain p-1" />
+            </span>
+            <span className="font-serif text-lg">Lua Coffee</span>
+          </Link>
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-[var(--muted)]">
+            {site.slogan}. {site.aciklama}
           </p>
         </div>
 
+        {/* Keşfet */}
+        <nav className="space-y-2 text-sm text-[var(--muted)]">
+          <h3 className="font-serif text-base text-[var(--foreground)]">Keşfet</h3>
+          {kesfet.map((l) => (
+            <Link key={l.href} href={l.href} className="block hover:text-[var(--foreground)]">
+              {l.etiket}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Yarışma */}
+        <nav className="space-y-2 text-sm text-[var(--muted)]">
+          <h3 className="font-serif text-base text-[var(--foreground)]">Yarışma</h3>
+          {yarismaLinkleri.map((l) => (
+            <Link key={l.href} href={l.href} className="block hover:text-[var(--foreground)]">
+              {l.etiket}
+            </Link>
+          ))}
+        </nav>
+
+        {/* İletişim */}
         <div className="space-y-3 text-sm text-[var(--muted)]">
-          <p className="flex items-center gap-2">
-            <MapPin size={16} className="shrink-0" />
-            Adres bilgisi yakında eklenecek
+          <h3 className="font-serif text-base text-[var(--foreground)]">İletişim</h3>
+          <p className="flex items-start gap-2">
+            <MapPin size={16} className="mt-0.5 shrink-0 text-[var(--accent)]" />
+            {site.iletisim.adres}
           </p>
           <p className="flex items-center gap-2">
-            <Clock size={16} className="shrink-0" />
-            Her gün 08:00 – 24:00
+            <Clock size={16} className="shrink-0 text-[var(--accent)]" />
+            {site.iletisim.saatler[0].saat}
           </p>
+          <a href={site.iletisim.telefonHref} className="flex items-center gap-2 hover:text-[var(--foreground)]">
+            <Phone size={16} className="shrink-0 text-[var(--accent)]" />
+            {site.iletisim.telefon}
+          </a>
           <a
-            href="https://instagram.com"
+            href={site.iletisim.instagram}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 hover:text-[var(--foreground)]"
           >
-            <AtSign size={16} className="shrink-0" />
-            @luacoffee
+            <AtSign size={16} className="shrink-0 text-[var(--accent)]" />
+            {site.iletisim.instagramKullanici}
           </a>
-        </div>
-
-        <div className="space-y-2 text-sm text-[var(--muted)]">
-          <Link href="/menu" className="block hover:text-[var(--foreground)]">
-            Menü
-          </Link>
-          <Link href="/yarisma" className="block hover:text-[var(--foreground)]">
-            Fotoğraf Yarışması
-          </Link>
-          <Link href="/yarisma/katil" className="block hover:text-[var(--foreground)]">
-            Yarışmaya Katıl
-          </Link>
         </div>
       </div>
 
