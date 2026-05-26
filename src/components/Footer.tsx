@@ -8,6 +8,7 @@ const kesfet = [
   { href: "/menu", etiket: "Menü" },
   { href: "/galeri", etiket: "Galeri" },
   { href: "/etkinlikler", etiket: "Etkinlikler" },
+  { href: "/sadakat", etiket: "Sadakat Kartım" },
 ];
 
 const yarismaLinkleri = [

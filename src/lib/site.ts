@@ -60,7 +60,7 @@ export const site = {
 
   hakkimizda: {
     paragraflar: [
-      "Lua Coffee, Soma'da üçüncü nesil (specialty) kahve deneyimini şehre taşımak için kuruldu. Özenle seçtiğimiz çekirdekleri, doğru ölçü ve sıcaklıkta, uzman ellerde hazırlıyoruz.",
+      "Lua Coffee, Soma'da üçüncü nesil kahve deneyimini şehre taşımak için kuruldu. Özenle seçtiğimiz çekirdekleri, doğru ölçü ve sıcaklıkta, uzman ellerde hazırlıyoruz.",
       "Espresso bazlı klasiklerden imza içeceklerimize uzanan geniş bir menü sunuyoruz. Hedefimiz; her fincanda tutarlı, nitelikli ve keyifli bir lezzet.",
       "Aynı zamanda bir buluşma ve üretim noktasıyız: seramik, mozaik ve mum atölyelerimizle Soma'da yaratıcı ve sıcak bir topluluk oluşturuyoruz. Kapımız iyi kahve, iyi sohbet ve üretmek isteyen herkese açık.",
     ],

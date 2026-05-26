@@ -12,6 +12,7 @@ const linkler = [
   { href: "/galeri", etiket: "Galeri" },
   { href: "/yarisma", etiket: "Yarışma" },
   { href: "/etkinlikler", etiket: "Etkinlikler" },
+  { href: "/sadakat", etiket: "Sadakat" },
   { href: "/iletisim", etiket: "İletişim" },
 ];
 

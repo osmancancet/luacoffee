@@ -1,11 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
+import { PwaRegister } from "@/components/PwaRegister";
 import { site } from "@/lib/site";
 import { Analytics } from "@vercel/analytics/next";
+
+export const viewport: Viewport = {
+  themeColor: "#0b0b0d",
+};
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,6 +42,11 @@ export const metadata: Metadata = {
     apple: "/logo.png",
     shortcut: "/logo.png",
   },
+  appleWebApp: {
+    capable: true,
+    title: "Lua Coffee",
+    statusBarStyle: "black-translucent",
+  },
   openGraph: {
     type: "website",
     locale: "tr_TR",
@@ -44,7 +54,7 @@ export const metadata: Metadata = {
     siteName: site.ad,
     title: "Lua Coffee · Soma, Manisa'da Üçüncü Nesil Kahve",
     description:
-      "Soma, Manisa'da özenle hazırlanan specialty kahveler, imza içecekler ve yaratıcı atölyeler.",
+      "Soma, Manisa'da özenle hazırlanan kahveler, imza içecekler ve yaratıcı atölyeler.",
     images: [
       {
         url: "/galeri/dis-cephe-2.webp",
@@ -57,7 +67,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Lua Coffee · Soma, Manisa",
-    description: "Soma, Manisa'da üçüncü nesil specialty kahve ve yaratıcı atölyeler.",
+    description: "Soma, Manisa'da üçüncü nesil kahve ve yaratıcı atölyeler.",
     images: ["/galeri/dis-cephe-2.webp"],
   },
   robots: {
@@ -76,6 +86,7 @@ export default function RootLayout({
         className={`${inter.variable} ${playfair.variable} flex min-h-screen flex-col antialiased`}
       >
         <JsonLd />
+        <PwaRegister />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

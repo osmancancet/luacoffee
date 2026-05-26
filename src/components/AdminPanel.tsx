@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { QrPanel } from "@/components/QrPanel";
+import { SadakatQrPanel } from "@/components/SadakatQrPanel";
 import { Check, X, LogOut, Loader2, ShieldCheck } from "lucide-react";
 
 type Gonderi = {
@@ -190,9 +191,10 @@ export function AdminPanel() {
           )}
         </section>
 
-        {/* QR paneli */}
-        <aside>
+        {/* QR panelleri */}
+        <aside className="space-y-6">
           <QrPanel />
+          <SadakatQrPanel />
         </aside>
       </div>
     </div>
