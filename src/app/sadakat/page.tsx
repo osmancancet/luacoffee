@@ -3,11 +3,13 @@ import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { SadakatKart } from "@/components/SadakatKart";
+import { CheckIn } from "@/components/CheckIn";
+import { ZiyaretSiralamasi } from "@/components/ZiyaretSiralamasi";
 
 export const metadata: Metadata = {
   title: "Sadakat Kartım",
   description:
-    "Lua Coffee sadakat kartı — 5 kahveye 1 bedava. Kasadaki QR'ı okut, damgalarını topla.",
+    "Lua Coffee sadakat kartı — 5 kahveye 1 bedava. Kasadaki QR'ı okut, damgalarını topla. Check-in yap, seri tuttur.",
   alternates: { canonical: "/sadakat" },
 };
 
@@ -17,9 +19,9 @@ export default function SadakatSayfasi() {
       <PageHeader
         eyebrow="Sadakat"
         baslik="Sadakat Kartım"
-        aciklama="5 kahveye 1 bedava — 6. kahve bizden. Kasadaki QR'ı okut, damganı topla."
+        aciklama="5 kahveye 1 bedava — 6. kahve bizden. Kasadaki QR'ı okut, damganı topla; check-in yap, serini büyüt."
       />
-      <div className="mt-12">
+      <div className="mt-12 space-y-6">
         <Suspense
           fallback={
             <div className="flex justify-center py-20">
@@ -29,6 +31,8 @@ export default function SadakatSayfasi() {
         >
           <SadakatKart />
         </Suspense>
+        <CheckIn />
+        <ZiyaretSiralamasi />
       </div>
     </div>
   );
