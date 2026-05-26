@@ -5,6 +5,7 @@ import { Camera, Trophy } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { createServiceClient } from "@/lib/supabase/server";
 import { VoteButton } from "@/components/VoteButton";
+import { PaylasButton } from "@/components/PaylasButton";
 import { Reveal } from "@/components/Reveal";
 import { suankiDonem, donemAdi } from "@/lib/utils";
 import { site } from "@/lib/site";
@@ -70,6 +71,12 @@ export default async function YarismaSayfasi() {
         >
           <Trophy size={16} /> Sıralama
         </Link>
+        <Link
+          href="/yarisma/arsiv"
+          className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-6 py-3 text-sm font-medium hover:border-[var(--accent)]"
+        >
+          Geçmiş Kazananlar
+        </Link>
       </div>
 
       {/* Ödüller */}
@@ -123,7 +130,10 @@ export default async function YarismaSayfasi() {
                     </p>
                   )}
                 </div>
-                <VoteButton submissionId={g.id} baslangicOyu={g.oy_sayisi} />
+                <div className="flex shrink-0 items-center gap-2">
+                  <PaylasButton gorselUrl={g.gorsel_url} baslik={g.baslik ?? undefined} />
+                  <VoteButton submissionId={g.id} baslangicOyu={g.oy_sayisi} />
+                </div>
               </div>
             </Reveal>
           ))}

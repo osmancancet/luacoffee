@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { tokenGecerli, mesafeMetre, damgaHesapla, HEDEF_DAMGA } from "@/lib/sadakat";
+import { bildirimGonder } from "@/lib/push";
 import { site } from "@/lib/site";
 
 const COOLDOWN_SN = 60; // aynı kullanıcıdan ardışık eklemeler arası bekleme
@@ -48,6 +49,11 @@ export async function GET() {
     await supabase
       .from("sadakat_islem")
       .insert({ kullanici_id: user.id, ad, tip: "kupon", not_: "Doğum günü kuponu" });
+    await bildirimGonder(supabase, user.id, {
+      baslik: "🎂 Doğum günün kutlu olsun!",
+      govde: "Bugün kahven Lua'dan. Kartındaki kuponu kasada göster.",
+      url: "/sadakat",
+    });
   }
 
   const { data: kuponlar } = await supabase
@@ -157,6 +163,21 @@ export async function POST(req: NextRequest) {
     tip: "damga",
     adet: n,
   });
+
+  // Push bildirimi: bedava kazandı / son 1 kahve
+  if (kazanilan > 0) {
+    await bildirimGonder(supabase, user.id, {
+      baslik: "🎉 Bedava kahve kazandın!",
+      govde: "Bir sonraki kahven Lua'dan. Afiyet olsun!",
+      url: "/sadakat",
+    });
+  } else if (yeniDamga === HEDEF_DAMGA - 1) {
+    await bildirimGonder(supabase, user.id, {
+      baslik: "Son 1 kahve! ☕",
+      govde: "Bir kahve daha, bedava kahve senin!",
+      url: "/sadakat",
+    });
+  }
 
   return NextResponse.json({
     basarili: true,

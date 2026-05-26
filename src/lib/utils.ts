@@ -17,6 +17,14 @@ export function suankiDonem(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 
+/** Bir önceki ayın dönemi: "YYYY-MM". */
+export function oncekiDonem(): string {
+  const d = new Date();
+  d.setDate(1);
+  d.setMonth(d.getMonth() - 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
 /** "YYYY-MM" → "Ocak 2026" gibi okunabilir ay adı. */
 export function donemAdi(donem: string): string {
   const aylar = [

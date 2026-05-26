@@ -17,9 +17,20 @@ import {
   Flame,
 } from "lucide-react";
 import { espressoCoffee } from "@/lib/menu";
-import { fiyat } from "@/lib/utils";
+import { fiyat, donemAdi } from "@/lib/utils";
 import { site } from "@/lib/site";
+import { createServiceClient } from "@/lib/supabase/server";
 import { Reveal } from "@/components/Reveal";
+
+export const revalidate = 300; // kazanan vitrini için ISR
+
+type Kazanan = {
+  donem: string;
+  ad: string | null;
+  baslik: string | null;
+  gorsel_url: string | null;
+  oy_sayisi: number;
+};
 
 const oneCikanlar = [
   { href: "/menu", ikon: Coffee, baslik: "Menü", metin: "Espresso, imza içecekler ve dahası" },
@@ -28,8 +39,22 @@ const oneCikanlar = [
   { href: "/etkinlikler", ikon: CalendarDays, baslik: "Etkinlikler", metin: "Olan biten ve duyurular" },
 ];
 
-export default function AnaSayfa() {
+export default async function AnaSayfa() {
   const oneCikan = espressoCoffee.slice(0, 6);
+
+  let kazanan: Kazanan | null = null;
+  try {
+    const supabase = createServiceClient();
+    const { data } = await supabase
+      .from("kazananlar")
+      .select("donem, ad, baslik, gorsel_url, oy_sayisi")
+      .order("donem", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    kazanan = (data as Kazanan) ?? null;
+  } catch {
+    kazanan = null;
+  }
 
   return (
     <>
@@ -269,6 +294,40 @@ export default function AnaSayfa() {
           </div>
         </div>
       </section>
+
+      {/* ===== Geçen ayın kazananı ===== */}
+      {kazanan?.gorsel_url && (
+        <section className="mx-auto max-w-6xl px-5 pt-8">
+          <Reveal className="overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)] sm:flex">
+            <div className="relative aspect-[4/3] sm:w-1/2">
+              <Image
+                src={kazanan.gorsel_url}
+                alt={kazanan.baslik ?? "Kazanan kare"}
+                fill
+                sizes="(max-width: 640px) 100vw, 50vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="flex flex-col justify-center p-8 sm:w-1/2">
+              <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--accent)]">
+                <Trophy size={14} /> {donemAdi(kazanan.donem)} Kazananı
+              </span>
+              <h2 className="mt-3 font-serif text-3xl">{kazanan.baslik ?? "İsimsiz"}</h2>
+              {kazanan.ad && <p className="mt-1 text-[var(--muted)]">{kazanan.ad}</p>}
+              <p className="mt-2 text-sm text-[var(--accent)]">
+                {kazanan.oy_sayisi} beğeni 🏆
+              </p>
+              <Link
+                href="/yarisma/arsiv"
+                className="group mt-6 inline-flex items-center gap-2 text-sm text-[var(--accent)] hover:text-[var(--accent-strong)]"
+              >
+                Geçmiş kazananlar
+                <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </Reveal>
+        </section>
+      )}
 
       {/* ===== Yarışma ===== */}
       <section className="mx-auto max-w-6xl px-5 py-24">

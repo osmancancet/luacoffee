@@ -1,5 +1,36 @@
-// Lua Coffee — basit service worker (PWA / uygulama gibi yükleme + temel çevrimdışı)
-const CACHE = "lua-v1";
+// Lua Coffee — service worker (PWA + çevrimdışı + push bildirimi)
+const CACHE = "lua-v2";
+
+// ——— Push bildirimi ———
+self.addEventListener("push", (event) => {
+  let veri = {};
+  try {
+    veri = event.data ? event.data.json() : {};
+  } catch {
+    veri = { baslik: "Lua Coffee", govde: event.data ? event.data.text() : "" };
+  }
+  event.waitUntil(
+    self.registration.showNotification(veri.baslik || "Lua Coffee", {
+      body: veri.govde || "",
+      icon: "/logo.png",
+      badge: "/logo.png",
+      data: { url: veri.url || "/" },
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const hedef = event.notification.data?.url || "/";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window" }).then((liste) => {
+      for (const c of liste) {
+        if (c.url.includes(hedef) && "focus" in c) return c.focus();
+      }
+      return self.clients.openWindow(hedef);
+    }),
+  );
+});
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

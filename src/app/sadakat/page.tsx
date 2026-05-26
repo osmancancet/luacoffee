@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { SadakatKart } from "@/components/SadakatKart";
 import { CheckIn } from "@/components/CheckIn";
 import { ZiyaretSiralamasi } from "@/components/ZiyaretSiralamasi";
+import { PushAboneButton } from "@/components/PushAboneButton";
 
 export const metadata: Metadata = {
   title: "Sadakat Kartım",
@@ -32,6 +33,7 @@ export default function SadakatSayfasi() {
           <SadakatKart />
         </Suspense>
         <CheckIn />
+        <PushAboneButton />
         <ZiyaretSiralamasi />
       </div>
     </div>

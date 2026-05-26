@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { QrPanel } from "@/components/QrPanel";
 import { SadakatQrPanel } from "@/components/SadakatQrPanel";
 import { SadakatYonetim } from "@/components/SadakatYonetim";
+import { AyiKapat } from "@/components/AyiKapat";
 import { Check, X, LogOut, Loader2, ShieldCheck } from "lucide-react";
 
 type Gonderi = {
@@ -196,6 +197,7 @@ export function AdminPanel() {
         <aside className="space-y-6">
           <QrPanel />
           <SadakatQrPanel />
+          <AyiKapat />
         </aside>
       </div>
 
