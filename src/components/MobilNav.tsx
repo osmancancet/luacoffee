@@ -68,6 +68,7 @@ export function MobilNav() {
               <Link
                 key={s.href}
                 href={s.href}
+                aria-current={aktif ? "page" : undefined}
                 className={`flex flex-col items-center gap-1 py-2.5 text-[11px] transition-colors ${
                   aktif ? "text-[var(--accent)]" : "text-[var(--muted)]"
                 }`}

@@ -12,7 +12,7 @@ export function PageHeader({
   aciklama?: string;
 }) {
   return (
-    <header className="mx-auto max-w-2xl text-center">
+    <div className="mx-auto max-w-2xl text-center">
       <span className="anim-fade-up inline-block text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
         {eyebrow ?? "Lua Coffee"}
       </span>
@@ -25,6 +25,6 @@ export function PageHeader({
         </p>
       )}
       <span className="anim-fade-up delay-3 mx-auto mt-7 block h-px w-16 bg-[var(--accent)]/40" />
-    </header>
+    </div>
   );
 }

@@ -34,6 +34,7 @@ export function Header() {
             <Link
               key={l.href}
               href={l.href}
+              aria-current={aktifMi(l.href) ? "page" : undefined}
               className={`group relative text-sm transition-colors hover:text-[var(--accent-strong)] ${
                 aktifMi(l.href) ? "text-[var(--accent-strong)]" : "text-[var(--muted)]"
               }`}

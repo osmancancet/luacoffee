@@ -64,6 +64,7 @@ export function VoteButton({
             : "border-[var(--border)] hover:border-[var(--accent)]"
         }`}
         title={oyVerildi ? "Oyunu kullandın" : "Beğen"}
+        aria-label={oyVerildi ? "Oyunu kullandın" : "Beğen"}
       >
         {yukleniyor ? (
           <Loader2 size={15} className="animate-spin" />

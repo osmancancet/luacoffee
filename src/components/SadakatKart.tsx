@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Coffee, Gift, Loader2, Check, LogOut, QrCode } from "lucide-react";
+import { Coffee, Gift, Loader2, Check, LogOut, QrCode, UserPlus, Share2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { QrTarayici } from "@/components/QrTarayici";
 
@@ -45,9 +45,12 @@ export function SadakatKart() {
   const [kuponlar, setKuponlar] = useState<{ id: string; baslik: string; tip: string }[]>([]);
   const [dogumAyGun, setDogumAyGun] = useState<string | null>(null);
   const [dogumInput, setDogumInput] = useState("");
+  const [referansKodu, setReferansKodu] = useState<string | null>(null);
+  const [davetKopya, setDavetKopya] = useState(false);
 
   const ekle = params.get("ekle");
   const token = params.get("t");
+  const ref = params.get("ref");
 
   /** Konum alıp damga ekler (hem URL'den hem tarayıcıdan kullanılır). */
   const damgaEkle = useCallback(async (adet: string | number, tok: string) => {
@@ -106,15 +109,28 @@ export function SadakatKart() {
       setKart(d);
       setKuponlar(d.kuponlar ?? []);
       setDogumAyGun(d.dogum_ay_gun ?? null);
+      setReferansKodu(d.referans_kodu ?? null);
       setDurum("kart");
+
+      // Davet kodu varsa kaydet
+      if (ref) {
+        await fetch("/api/sadakat/davet", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ kod: ref }),
+        }).catch(() => {});
+      }
+
       if (ekle && token) {
         await damgaEkle(ekle, token);
+        router.replace("/sadakat");
+      } else if (ref) {
         router.replace("/sadakat");
       }
     } catch {
       setDurum("kart");
     }
-  }, [ekle, token, router, damgaEkle]);
+  }, [ekle, token, ref, router, damgaEkle]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -124,7 +140,13 @@ export function SadakatKart() {
   async function girisYap() {
     setGirisYukleniyor(true);
     const supabase = createClient();
-    const next = `/sadakat${ekle && token ? `?ekle=${ekle}&t=${token}` : ""}`;
+    const qs = new URLSearchParams();
+    if (ekle && token) {
+      qs.set("ekle", ekle);
+      qs.set("t", token);
+    }
+    if (ref) qs.set("ref", ref);
+    const next = `/sadakat${qs.toString() ? `?${qs}` : ""}`;
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -187,6 +209,26 @@ export function SadakatKart() {
       setDogumAyGun(ay_gun);
       setMesaj("Doğum günün kaydedildi 🎂 O gün kahven bizden!");
       setMesajTipi("basari");
+    }
+  }
+
+  async function davetPaylas() {
+    const link = `${window.location.origin}/sadakat?ref=${referansKodu}`;
+    const metin = "Lua Coffee'de buluşalım! Bu linkle gel, ikimiz de 1 damga kazanalım ☕";
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "Lua Coffee", text: metin, url: link });
+        return;
+      }
+    } catch {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(link);
+      setDavetKopya(true);
+      setTimeout(() => setDavetKopya(false), 2000);
+    } catch {
+      /* yok say */
     }
   }
 
@@ -375,6 +417,24 @@ export function SadakatKart() {
               Kaydet
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Arkadaşını davet et */}
+      {referansKodu && (
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 text-center">
+          <UserPlus className="mx-auto text-[var(--accent)]" size={26} />
+          <p className="mt-3 font-serif text-lg">Arkadaşını getir</p>
+          <p className="mx-auto mt-1 max-w-xs text-sm text-[var(--muted)]">
+            Davet linkinle gelen arkadaşın ilk kahvesinde <strong className="text-[var(--foreground)]">ikinize de 1 damga</strong>!
+          </p>
+          <button
+            onClick={davetPaylas}
+            className="mt-4 inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-105"
+          >
+            {davetKopya ? <Check size={16} /> : <Share2 size={16} />}
+            {davetKopya ? "Link kopyalandı" : "Davet Et"}
+          </button>
         </div>
       )}
 

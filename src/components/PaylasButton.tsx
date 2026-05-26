@@ -61,6 +61,7 @@ export function PaylasButton({
     <button
       onClick={paylas}
       title="Paylaş"
+      aria-label="Paylaş"
       className="flex items-center gap-1.5 rounded-full border border-[var(--border)] px-3 py-1.5 text-sm transition-colors hover:border-[var(--accent)]"
     >
       {kopyalandi ? <Check size={15} className="text-[var(--accent)]" /> : <Share2 size={15} />}

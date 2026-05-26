@@ -15,6 +15,7 @@ import {
   Heart,
   Trophy,
   Flame,
+  Star,
 } from "lucide-react";
 import { espressoCoffee } from "@/lib/menu";
 import { fiyat, donemAdi } from "@/lib/utils";
@@ -43,21 +44,33 @@ export default async function AnaSayfa() {
   const oneCikan = espressoCoffee.slice(0, 6);
 
   let kazanan: Kazanan | null = null;
+  let kampanya: { aktif: boolean; metin: string } | null = null;
   try {
     const supabase = createServiceClient();
-    const { data } = await supabase
-      .from("kazananlar")
-      .select("donem, ad, baslik, gorsel_url, oy_sayisi")
-      .order("donem", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    kazanan = (data as Kazanan) ?? null;
+    const [kz, km] = await Promise.all([
+      supabase
+        .from("kazananlar")
+        .select("donem, ad, baslik, gorsel_url, oy_sayisi")
+        .order("donem", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase.from("kampanya").select("aktif, metin").eq("id", 1).maybeSingle(),
+    ]);
+    kazanan = (kz.data as Kazanan) ?? null;
+    kampanya = km.data ?? null;
   } catch {
     kazanan = null;
   }
 
   return (
     <>
+      {/* ===== Kampanya / günün kahvesi şeridi ===== */}
+      {kampanya?.aktif && kampanya.metin && (
+        <div className="bg-[var(--accent-strong)] px-5 py-2.5 text-center text-sm font-medium text-black">
+          {kampanya.metin}
+        </div>
+      )}
+
       {/* ===== Hero ===== */}
       <section className="relative isolate overflow-hidden">
         <Image
@@ -397,6 +410,47 @@ export default async function AnaSayfa() {
           >
             Galeriyi Gör &amp; Oy Ver
           </Link>
+        </div>
+      </section>
+
+      {/* ===== Misafir yorumları ===== */}
+      <section className="border-t border-[var(--border)] bg-[var(--surface)]/30">
+        <div className="mx-auto max-w-6xl px-5 py-24">
+          <Reveal className="text-center">
+            <span className="text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
+              Misafirlerimiz
+            </span>
+            <h2 className="mt-3 font-serif text-3xl sm:text-4xl">Ne diyorlar?</h2>
+          </Reveal>
+          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+            {site.yorumlar.map((y, i) => (
+              <Reveal
+                key={y.ad}
+                delay={i * 90}
+                className="rounded-2xl border border-[var(--border)] bg-[var(--background)] p-6"
+              >
+                <div className="flex gap-0.5 text-[var(--accent)]">
+                  {Array.from({ length: y.yildiz }).map((_, s) => (
+                    <Star key={s} size={15} className="fill-[var(--accent)]" />
+                  ))}
+                </div>
+                <p className="mt-3 leading-relaxed text-[var(--muted)]">
+                  &quot;{y.metin}&quot;
+                </p>
+                <p className="mt-4 text-sm font-medium">{y.ad}</p>
+              </Reveal>
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <a
+              href={site.iletisim.yorumYazLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-6 py-3 text-sm font-medium hover:border-[var(--accent)]"
+            >
+              <Star size={16} className="text-[var(--accent)]" /> Google&apos;da Değerlendir
+            </a>
+          </div>
         </div>
       </section>
 

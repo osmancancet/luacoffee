@@ -7,6 +7,8 @@ import { QrPanel } from "@/components/QrPanel";
 import { SadakatQrPanel } from "@/components/SadakatQrPanel";
 import { SadakatYonetim } from "@/components/SadakatYonetim";
 import { AyiKapat } from "@/components/AyiKapat";
+import { AdminIstatistik } from "@/components/AdminIstatistik";
+import { KampanyaYonetim } from "@/components/KampanyaYonetim";
 import { Check, X, LogOut, Loader2, ShieldCheck } from "lucide-react";
 
 type Gonderi = {
@@ -135,6 +137,10 @@ export function AdminPanel() {
         </button>
       </div>
 
+      <div className="mt-8">
+        <AdminIstatistik />
+      </div>
+
       <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_320px]">
         {/* Bekleyen onaylar */}
         <section>
@@ -196,6 +202,7 @@ export function AdminPanel() {
         {/* QR panelleri */}
         <aside className="space-y-6">
           <QrPanel />
+          <KampanyaYonetim />
           <SadakatQrPanel />
           <AyiKapat />
         </aside>

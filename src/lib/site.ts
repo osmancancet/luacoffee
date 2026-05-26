@@ -56,7 +56,17 @@ export const site = {
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3092.5788359631524!2d27.6066453!3d39.1842943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14b761d432bbed79%3A0x435ac4a22fe08457!2sLua%20Coffee!5e0!3m2!1str!2str!4v1779762521608!5m2!1str!2str",
     haritaLink:
       "https://www.google.com/maps/search/?api=1&query=39.1842943,27.6066453",
+    // Google'da yorum yazma bağlantısı (müşteriyi haritadaki kayda yönlendirir)
+    yorumYazLink:
+      "https://www.google.com/maps/search/?api=1&query=Lua+Coffee+Soma",
   },
+
+  // Misafir yorumları (placeholder — gerçek yorumlarla değiştirin)
+  yorumlar: [
+    { ad: "Elif K.", yildiz: 5, metin: "Soma'nın en iyi kahvesi! Atmosfer çok huzurlu, baristalar işinin ehli." },
+    { ad: "Mert A.", yildiz: 5, metin: "Lotus Latte favorim oldu. Atölyeler de çok keyifli, herkese tavsiye ederim." },
+    { ad: "Zeynep T.", yildiz: 5, metin: "Sadakat kartı ve yarışma çok eğlenceli. Artık müdavimiyim ☕" },
+  ] as { ad: string; yildiz: number; metin: string }[],
 
   // Aylık fotoğraf yarışması ödülleri (ilk 3, kademeli)
   yarismaOduller: [

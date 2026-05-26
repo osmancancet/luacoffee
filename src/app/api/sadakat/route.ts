@@ -28,9 +28,24 @@ export async function GET() {
   const supabase = createServiceClient();
   const { data } = await supabase
     .from("sadakat")
-    .select("damga, bedava_hak, toplam_damga, dogum_ay_gun, son_dogum_yili")
+    .select("damga, bedava_hak, toplam_damga, dogum_ay_gun, son_dogum_yili, referans_kodu")
     .eq("kullanici_id", user.id)
     .maybeSingle();
+
+  // Referans kodu yoksa üret
+  let referansKodu = data?.referans_kodu as string | undefined;
+  if (!referansKodu) {
+    referansKodu = user.id.replace(/-/g, "").slice(0, 8);
+    await supabase.from("sadakat").upsert(
+      {
+        kullanici_id: user.id,
+        ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+        eposta: user.email ?? null,
+        referans_kodu: referansKodu,
+      },
+      { onConflict: "kullanici_id" },
+    );
+  }
 
   // Doğum günü bugünse ve bu yıl ödül verilmediyse → kupon oluştur
   const ad = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null;
@@ -71,6 +86,7 @@ export async function GET() {
     toplam_damga: data?.toplam_damga ?? 0,
     hedef: HEDEF_DAMGA,
     dogum_ay_gun: data?.dogum_ay_gun ?? null,
+    referans_kodu: referansKodu,
     kuponlar: kuponlar ?? [],
   });
 }
@@ -136,10 +152,11 @@ export async function POST(req: NextRequest) {
   }
 
   const hesap = damgaHesapla(mevcut?.damga ?? 0, n, mevcut?.bedava_hak ?? 0);
-  const yeniDamga = hesap.damga;
+  let yeniDamga = hesap.damga;
   const kazanilan = hesap.kazanilan;
-  const yeniBedava = hesap.bedava_hak;
-  const yeniToplam = (mevcut?.toplam_damga ?? 0) + n;
+  let yeniBedava = hesap.bedava_hak;
+  let yeniToplam = (mevcut?.toplam_damga ?? 0) + n;
+  const ilkDamgaMi = (mevcut?.toplam_damga ?? 0) === 0;
 
   const { error } = await supabase.from("sadakat").upsert(
     {
@@ -163,6 +180,57 @@ export async function POST(req: NextRequest) {
     tip: "damga",
     adet: n,
   });
+
+  // Referans bonusu — ilk damgada her iki tarafa +1
+  if (ilkDamgaMi) {
+    const { data: row } = await supabase
+      .from("sadakat")
+      .select("davet_eden, referans_odullendi")
+      .eq("kullanici_id", user.id)
+      .maybeSingle();
+    if (row?.davet_eden && !row.referans_odullendi) {
+      // Davet edilen (mevcut kullanıcı) bonusu
+      const fb = damgaHesapla(yeniDamga, 1, yeniBedava);
+      yeniDamga = fb.damga;
+      yeniBedava = fb.bedava_hak;
+      yeniToplam += 1;
+      await supabase
+        .from("sadakat")
+        .update({ damga: yeniDamga, bedava_hak: yeniBedava, toplam_damga: yeniToplam, referans_odullendi: true })
+        .eq("kullanici_id", user.id);
+
+      // Davet eden bonusu
+      const { data: rr } = await supabase
+        .from("sadakat")
+        .select("damga, bedava_hak, toplam_damga")
+        .eq("kullanici_id", row.davet_eden)
+        .maybeSingle();
+      if (rr) {
+        const rb = damgaHesapla(rr.damga ?? 0, 1, rr.bedava_hak ?? 0);
+        await supabase
+          .from("sadakat")
+          .update({ damga: rb.damga, bedava_hak: rb.bedava_hak, toplam_damga: (rr.toplam_damga ?? 0) + 1 })
+          .eq("kullanici_id", row.davet_eden);
+        await supabase.from("sadakat_islem").insert({
+          kullanici_id: row.davet_eden,
+          tip: "manuel",
+          adet: 1,
+          not_: "Referans bonusu (davet)",
+        });
+        await bildirimGonder(supabase, row.davet_eden, {
+          baslik: "🎁 Arkadaşın geldi!",
+          govde: "Davetinle 1 damga kazandın. Teşekkürler!",
+          url: "/sadakat",
+        });
+      }
+      await supabase.from("sadakat_islem").insert({
+        kullanici_id: user.id,
+        tip: "manuel",
+        adet: 1,
+        not_: "Referans bonusu (davet edilen)",
+      });
+    }
+  }
 
   // Push bildirimi: bedava kazandı / son 1 kahve
   if (kazanilan > 0) {
