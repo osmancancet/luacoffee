@@ -29,7 +29,7 @@ export function Footer() {
             <span className="font-serif text-lg">Lua Coffee</span>
           </Link>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-[var(--muted)]">
-            {site.slogan}. {site.aciklama}
+            {site.aciklama}
           </p>
         </div>
 

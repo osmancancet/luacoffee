@@ -6,7 +6,6 @@ import {
   Coffee,
   ImageIcon,
   CalendarDays,
-  Moon,
   MapPin,
   Clock,
 } from "lucide-react";
@@ -39,14 +38,14 @@ export default function AnaSayfa() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--background)]/40 via-[var(--background)]/70 to-[var(--background)]" />
 
         <div className="mx-auto flex max-w-6xl flex-col items-center px-5 py-32 text-center sm:py-44">
-          <span className="anim-fade-up delay-1 mb-6 inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
-            <Moon size={14} className="anim-float text-[var(--accent)]" /> {site.slogan}
+          <span className="anim-fade-up delay-1 mb-6 inline-block text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
+            Soma · Üçüncü Nesil Kahve
           </span>
           <h1 className="anim-fade-up delay-2 font-serif text-6xl leading-[0.95] sm:text-8xl">
             Lua Coffee
           </h1>
           <p className="anim-fade-up delay-3 mt-6 max-w-xl text-lg leading-relaxed text-[var(--muted)]">
-            {site.aciklama} Lua&apos;da her fincan bir hikâye.
+            {site.aciklama}
           </p>
           <div className="anim-fade-up delay-4 mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
@@ -71,8 +70,8 @@ export default function AnaSayfa() {
         <div className="grid items-center gap-12 md:grid-cols-2">
           <Reveal className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-[var(--border)]">
             <Image
-              src="/galeri/dis-cephe-2.webp"
-              alt="Lua Coffee mekânı"
+              src="/galeri/ic-mekan-genis.png"
+              alt="Lua Coffee iç mekânı"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
@@ -83,7 +82,7 @@ export default function AnaSayfa() {
               Hakkımızda
             </span>
             <h2 className="mt-3 font-serif text-3xl sm:text-4xl">
-              Ayın altında bir kaçış
+              Soma&apos;da iyi kahvenin adresi
             </h2>
             <p className="mt-5 leading-relaxed text-[var(--muted)]">
               {site.hakkimizda.paragraflar[0]}
@@ -157,10 +156,6 @@ export default function AnaSayfa() {
       {/* ===== Yarışma CTA ===== */}
       <section className="mx-auto max-w-6xl px-5 pb-24">
         <Reveal className="relative overflow-hidden rounded-3xl border border-[var(--border)] bg-gradient-to-br from-[var(--surface-2)] to-[var(--surface)] px-8 py-16 text-center">
-          <Moon
-            size={180}
-            className="anim-spin-slow pointer-events-none absolute -right-10 -top-10 text-white/5"
-          />
           <h2 className="font-serif text-3xl sm:text-4xl">Fotoğraf Yarışması</h2>
           <p className="mx-auto mt-4 max-w-lg leading-relaxed text-[var(--muted)]">
             Lua&apos;daki anını fotoğrafla, yükle ve oyları topla. QR kodu okut,

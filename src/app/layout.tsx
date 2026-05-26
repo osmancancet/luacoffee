@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     siteName: site.ad,
     title: "Lua Coffee · Soma, Manisa'da Üçüncü Nesil Kahve",
     description:
-      "Soma, Manisa'da özenle hazırlanan kahveler, imza içecekler ve gece temalı atmosfer. Ayın altında bir kahve molası.",
+      "Soma, Manisa'da özenle hazırlanan specialty kahveler, imza içecekler ve yaratıcı atölyeler.",
     images: [
       {
         url: "/galeri/dis-cephe-2.webp",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Lua Coffee · Soma, Manisa",
-    description: "Soma, Manisa'da üçüncü nesil kahve. Ayın altında bir kahve molası.",
+    description: "Soma, Manisa'da üçüncü nesil specialty kahve ve yaratıcı atölyeler.",
     images: ["/galeri/dis-cephe-2.webp"],
   },
   robots: {

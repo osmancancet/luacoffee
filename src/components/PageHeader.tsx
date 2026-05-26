@@ -1,5 +1,3 @@
-import { Moon } from "lucide-react";
-
 /**
  * Tüm sayfalarda tutarlı, minimal & lüks sayfa başlığı.
  * eyebrow (küçük üst etiket) + serif başlık + muted alt başlık.
@@ -15,8 +13,7 @@ export function PageHeader({
 }) {
   return (
     <header className="mx-auto max-w-2xl text-center">
-      <span className="anim-fade-up inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
-        <Moon size={13} className="text-[var(--accent)]" />
+      <span className="anim-fade-up inline-block text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
         {eyebrow ?? "Lua Coffee"}
       </span>
       <h1 className="anim-fade-up delay-1 mt-4 font-serif text-4xl leading-tight sm:text-5xl">

@@ -12,7 +12,7 @@ export function JsonLd() {
     "@context": "https://schema.org",
     "@type": "CafeOrCoffeeShop",
     name: site.ad,
-    description: `${site.slogan}. ${site.aciklama}`,
+    description: site.aciklama,
     url: site.url,
     image: `${site.url}/galeri/dis-cephe-2.webp`,
     logo: `${site.url}/logo.png`,

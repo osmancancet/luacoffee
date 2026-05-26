@@ -8,7 +8,7 @@ export const site = {
   ad: "Lua Coffee",
   slogan: "Ayın altında bir kahve molası",
   aciklama:
-    "Gece esintili lezzetler, özenle hazırlanan kahveler ve paylaşmaya değer anlar.",
+    "Soma'da özenle hazırlanan kahveler, imza lezzetler ve yaratıcı atölyeler.",
 
   // Canlı domain (SEO / canonical / OG için temel URL)
   url: "https://lua.coffee",
@@ -60,26 +60,26 @@ export const site = {
 
   hakkimizda: {
     paragraflar: [
-      '"Lua" Portekizcede ay demek. Biz de kahveyi günün en sakin, en samimi anlarının eşlikçisi olarak görüyoruz. Üçüncü nesil kahve anlayışıyla seçtiğimiz çekirdekleri, gece teması bir atmosferde servis ediyoruz.',
-      "Espresso bazlı klasiklerden imza içeceklerimize kadar her şey özenle hazırlanıyor. Amacımız; her fincanda bir an, her ziyarette küçük bir kaçış sunmak.",
-      "Lua Coffee bir buluşma noktası: arkadaşlarla, kitaplarla ya da kendinle. Ayın altında, sıcacık bir köşede seni bekliyoruz.",
+      "Lua Coffee, Soma'da üçüncü nesil (specialty) kahve deneyimini şehre taşımak için kuruldu. Özenle seçtiğimiz çekirdekleri, doğru ölçü ve sıcaklıkta, uzman ellerde hazırlıyoruz.",
+      "Espresso bazlı klasiklerden imza içeceklerimize uzanan geniş bir menü sunuyoruz. Hedefimiz; her fincanda tutarlı, nitelikli ve keyifli bir lezzet.",
+      "Aynı zamanda bir buluşma ve üretim noktasıyız: seramik, mozaik ve mum atölyelerimizle Soma'da yaratıcı ve sıcak bir topluluk oluşturuyoruz. Kapımız iyi kahve, iyi sohbet ve üretmek isteyen herkese açık.",
     ],
     degerler: [
       {
-        baslik: "Özenli Demleme",
-        metin: "Taze kavrulmuş, seçilmiş çekirdekler; ölçülü ve titiz hazırlık.",
-      },
-      {
-        baslik: "Gece Teması",
-        metin: "Sakin ışık, ay esintili tasarım, huzur veren bir atmosfer.",
+        baslik: "Specialty Kahve",
+        metin: "Özenle seçilmiş çekirdekler; tutarlı, nitelikli ve titiz demleme.",
       },
       {
         baslik: "İmza Lezzetler",
-        metin: "Lua Voltage, Nebula Shake ve daha fazlası — yalnızca bizde.",
+        metin: "Lua Voltage, Nebula Shake ve yalnızca bize özgü tarifler.",
       },
       {
-        baslik: "Topluluk",
-        metin: "Fotoğraf yarışması ve etkinliklerle canlı bir Lua topluluğu.",
+        baslik: "Atölye & Topluluk",
+        metin: "Seramik, mozaik ve mum atölyeleriyle yaratıcı buluşmalar.",
+      },
+      {
+        baslik: "Sıcak Mekân",
+        metin: "Rahat, şık ve davetkâr bir ortam; kaliteli vakit için tasarlandı.",
       },
     ],
   },

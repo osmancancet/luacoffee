@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Coffee, Moon, Sparkles, Users } from "lucide-react";
+import { ArrowRight, Coffee, Sparkles, Palette, Heart } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { Reveal } from "@/components/Reveal";
 import { site } from "@/lib/site";
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/hakkimizda" },
 };
 
-const IKONLAR = [Coffee, Moon, Sparkles, Users];
+const IKONLAR = [Coffee, Sparkles, Palette, Heart];
 
 export default function HakkimizdaSayfasi() {
   return (
@@ -20,15 +20,15 @@ export default function HakkimizdaSayfasi() {
       <PageHeader
         eyebrow="Hakkımızda"
         baslik="Hikâyemiz"
-        aciklama={site.slogan}
+        aciklama="Soma'da üçüncü nesil kahve, imza lezzetler ve yaratıcı atölyeler."
       />
 
       {/* Hikâye + görsel */}
       <section className="mt-16 grid items-center gap-12 md:grid-cols-2">
         <Reveal className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-[var(--border)]">
           <Image
-            src="/galeri/dis-cephe-2.webp"
-            alt="Lua Coffee girişi"
+            src="/galeri/ic-mekan-lua-duvar.png"
+            alt="Lua Coffee iç mekânı — lua duvarı ve bar"
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover"
