@@ -7,6 +7,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { VoteButton } from "@/components/VoteButton";
 import { Reveal } from "@/components/Reveal";
 import { suankiDonem, donemAdi } from "@/lib/utils";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Fotoğraf Yarışması",
@@ -69,6 +70,19 @@ export default async function YarismaSayfasi() {
         >
           <Trophy size={16} /> Sıralama
         </Link>
+      </div>
+
+      {/* Ödüller */}
+      <div className="mx-auto mt-8 flex max-w-xl flex-wrap items-center justify-center gap-2.5">
+        {site.yarismaOduller.map((o) => (
+          <span
+            key={o.sira}
+            className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-1.5 text-sm"
+          >
+            <span>{o.madalya}</span>
+            <span className="text-[var(--muted)]">{o.odul}</span>
+          </span>
+        ))}
       </div>
 
       {gonderiler.length === 0 ? (

@@ -289,7 +289,24 @@ export default function AnaSayfa() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+        {/* Ödüller */}
+        <Reveal className="mt-12">
+          <h3 className="text-center font-serif text-2xl">Ayın Ödülleri</h3>
+          <div className="mx-auto mt-6 grid max-w-2xl gap-3 sm:grid-cols-3">
+            {site.yarismaOduller.map((o) => (
+              <div
+                key={o.sira}
+                className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-center"
+              >
+                <div className="text-3xl">{o.madalya}</div>
+                <div className="mt-2 font-serif text-lg">{o.sira}</div>
+                <p className="mt-1 text-sm text-[var(--muted)]">{o.odul}</p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/yarisma/katil"
             className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-105"

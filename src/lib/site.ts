@@ -58,6 +58,13 @@ export const site = {
       "https://www.google.com/maps/search/?api=1&query=39.1842943,27.6066453",
   },
 
+  // Aylık fotoğraf yarışması ödülleri (ilk 3, kademeli)
+  yarismaOduller: [
+    { madalya: "🥇", sira: "1.", odul: "Kahve + tatlı ikramı" },
+    { madalya: "🥈", sira: "2.", odul: "Ücretsiz kahve" },
+    { madalya: "🥉", sira: "3.", odul: "Kahvede %50 indirim" },
+  ] as { madalya: string; sira: string; odul: string }[],
+
   hakkimizda: {
     paragraflar: [
       "Lua Coffee, Soma'da üçüncü nesil kahve deneyimini şehre taşımak için kuruldu. Özenle seçtiğimiz çekirdekleri, doğru ölçü ve sıcaklıkta, uzman ellerde hazırlıyoruz.",
