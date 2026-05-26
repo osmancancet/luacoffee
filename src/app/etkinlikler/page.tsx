@@ -6,8 +6,9 @@ import { Reveal } from "@/components/Reveal";
 import { etkinlikler } from "@/lib/etkinlikler";
 
 export const metadata: Metadata = {
-  title: "Etkinlikler & Duyurular — Lua Coffee",
-  description: "Lua Coffee'deki etkinlikler, kampanyalar ve duyurular.",
+  title: "Etkinlikler & Duyurular",
+  description: "Lua Coffee (Soma, Manisa) etkinlikleri, kampanyaları ve duyuruları.",
+  alternates: { canonical: "/etkinlikler" },
 };
 
 export default function EtkinliklerSayfasi() {

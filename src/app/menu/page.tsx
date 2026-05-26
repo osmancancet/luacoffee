@@ -5,8 +5,10 @@ import { Reveal } from "@/components/Reveal";
 import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
-  title: "Menü — Lua Coffee",
-  description: "Lua Coffee menüsü: espresso bazlı kahveler, imza içecekler ve daha fazlası.",
+  title: "Menü",
+  description:
+    "Lua Coffee menüsü (Soma, Manisa): espresso bazlı kahveler, imza içecekler, sıcak & soğuk seçenekler ve fiyatları.",
+  alternates: { canonical: "/menu" },
 };
 
 export default function MenuSayfasi() {

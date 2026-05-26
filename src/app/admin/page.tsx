@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AdminPanel } from "@/components/AdminPanel";
 
 export const metadata: Metadata = {
-  title: "Yönetim — Lua Coffee",
+  title: "Yönetim",
   robots: { index: false, follow: false },
 };
 

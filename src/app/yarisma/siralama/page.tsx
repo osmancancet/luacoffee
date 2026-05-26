@@ -6,8 +6,9 @@ import { Leaderboard, type SiraGonderi } from "@/components/Leaderboard";
 import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
-  title: "Sıralama — Lua Coffee Yarışması",
+  title: "Sıralama",
   description: "Lua Coffee fotoğraf yarışmasının canlı oy sıralaması.",
+  alternates: { canonical: "/yarisma/siralama" },
 };
 
 export const revalidate = 0;

@@ -6,8 +6,10 @@ import { IletisimFormu } from "@/components/IletisimFormu";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "İletişim & Konum — Lua Coffee",
-  description: `${site.ad} adres, çalışma saatleri ve iletişim bilgileri.`,
+  title: "İletişim & Konum",
+  description:
+    "Lua Coffee — Soma, Manisa adres, çalışma saatleri, telefon ve harita. Nihat Danışman Mah. Topçu Sokak No: 9/A.",
+  alternates: { canonical: "/iletisim" },
 };
 
 export default function IletisimSayfasi() {

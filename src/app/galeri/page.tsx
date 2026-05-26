@@ -5,8 +5,9 @@ import { Reveal } from "@/components/Reveal";
 import { galeri } from "@/lib/galeri";
 
 export const metadata: Metadata = {
-  title: "Galeri — Lua Coffee",
-  description: "Lua Coffee'nin mekânından ve atmosferinden kareler.",
+  title: "Galeri",
+  description: "Lua Coffee'nin Soma, Manisa'daki mekânından ve atmosferinden kareler.",
+  alternates: { canonical: "/galeri" },
 };
 
 export default function GaleriSayfasi() {

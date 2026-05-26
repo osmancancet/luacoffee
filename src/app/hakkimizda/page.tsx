@@ -7,8 +7,9 @@ import { Reveal } from "@/components/Reveal";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Hakkımızda — Lua Coffee",
-  description: site.aciklama,
+  title: "Hakkımızda",
+  description: `Lua Coffee'nin hikâyesi — Soma, Manisa'da üçüncü nesil kahve anlayışı. ${site.aciklama}`,
+  alternates: { canonical: "/hakkimizda" },
 };
 
 const IKONLAR = [Coffee, Moon, Sparkles, Users];

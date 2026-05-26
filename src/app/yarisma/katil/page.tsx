@@ -3,8 +3,9 @@ import { UploadForm } from "@/components/UploadForm";
 import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
-  title: "Yarışmaya Katıl — Lua Coffee",
+  title: "Yarışmaya Katıl",
   description: "Lua'daki anını fotoğrafla, yükle ve oyları topla.",
+  alternates: { canonical: "/yarisma/katil" },
 };
 
 export default function KatilSayfasi() {

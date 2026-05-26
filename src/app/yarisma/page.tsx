@@ -8,8 +8,10 @@ import { VoteButton } from "@/components/VoteButton";
 import { Reveal } from "@/components/Reveal";
 
 export const metadata: Metadata = {
-  title: "Fotoğraf Yarışması — Lua Coffee",
-  description: "Lua Coffee fotoğraf yarışması galerisi. En sevdiğin kareye oy ver.",
+  title: "Fotoğraf Yarışması",
+  description:
+    "Lua Coffee (Soma) fotoğraf yarışması galerisi. En sevdiğin kareye oy ver, sen de katıl.",
+  alternates: { canonical: "/yarisma" },
 };
 
 // Oylar değiştikçe güncel kalsın
