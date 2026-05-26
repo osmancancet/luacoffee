@@ -4,6 +4,7 @@ import { Camera } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/server";
 import { Leaderboard, type SiraGonderi } from "@/components/Leaderboard";
 import { PageHeader } from "@/components/PageHeader";
+import { suankiDonem, donemAdi } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Sıralama",
@@ -24,12 +25,14 @@ export default async function SiralamaSayfasi() {
     .limit(1)
     .single();
 
+  const donem = suankiDonem();
   let gonderiler: SiraGonderi[] = [];
   if (contest) {
     const { data } = await supabase
       .from("onayli_gonderiler")
       .select("id, baslik, yukleyen_ad, gorsel_url, oy_sayisi")
       .eq("contest_id", contest.id)
+      .eq("donem", donem)
       .order("oy_sayisi", { ascending: false })
       .order("created_at", { ascending: true });
     gonderiler = (data as SiraGonderi[]) ?? [];
@@ -38,13 +41,9 @@ export default async function SiralamaSayfasi() {
   return (
     <div className="mx-auto max-w-3xl px-5 py-16 sm:py-24">
       <PageHeader
-        eyebrow="Sıralama"
+        eyebrow={`${donemAdi(donem)} Sıralaması`}
         baslik="Sıralama"
-        aciklama={
-          contest?.baslik
-            ? `${contest.baslik} — en çok oyu toplayan kareler`
-            : "Yarışmanın en çok oyu toplayan kareleri"
-        }
+        aciklama="Bu ayın en çok beğenilen kareleri. Her ay sıfırlanır."
       />
 
       <div className="anim-fade-in delay-3 mt-12">

@@ -14,7 +14,7 @@ export default function KatilSayfasi() {
       <PageHeader
         eyebrow="Yarışma"
         baslik="Yarışmaya Katıl"
-        aciklama="Lua'daki anını paylaş, en çok oyu toplayan kazansın."
+        aciklama="Kafemizde Lua bardağıyla çektiğin en güzel kareyi yükle. Ayda 1 fotoğraf, ayın en çok beğenileni kazanır."
       />
       <div className="anim-fade-up delay-3 mt-12">
         <UploadForm />

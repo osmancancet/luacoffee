@@ -1,13 +1,8 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import { Heart, Loader2 } from "lucide-react";
-
-/** Bu yarışmada oy verilip verilmediğini lokal olarak da işaretler (UX için). */
-const OY_ANAHTARI = "lua_oy_verildi";
-
-// localStorage'ı yalnız kendimiz değiştiriyoruz; abonelik no-op.
-const subscribe = () => () => {};
+import { createClient } from "@/lib/supabase/client";
 
 export function VoteButton({
   submissionId,
@@ -16,19 +11,10 @@ export function VoteButton({
   submissionId: string;
   baslangicOyu: number;
 }) {
-  // SSR'da false, client'ta localStorage'tan okunur — hydration güvenli.
-  const kayitliOy = useSyncExternalStore(
-    subscribe,
-    () => localStorage.getItem(OY_ANAHTARI) === "1",
-    () => false,
-  );
-
   const [oy, setOy] = useState(baslangicOyu);
   const [yukleniyor, setYukleniyor] = useState(false);
-  const [yeniOy, setYeniOy] = useState(false);
+  const [oyVerildi, setOyVerildi] = useState(false);
   const [mesaj, setMesaj] = useState<string | null>(null);
-
-  const oyVerildi = kayitliOy || yeniOy;
 
   async function oyVer() {
     if (oyVerildi || yukleniyor) return;
@@ -41,15 +27,23 @@ export function VoteButton({
         body: JSON.stringify({ submission_id: submissionId }),
       });
       const data = await res.json();
+
+      if (res.status === 401 && data.girisGerekli) {
+        // Giriş yap, sonra yarışmaya dön
+        await createClient().auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent("/yarisma")}`,
+          },
+        });
+        return;
+      }
+
       if (res.ok) {
         setOy(data.oySayisi);
-        localStorage.setItem(OY_ANAHTARI, "1");
-        setYeniOy(true);
+        setOyVerildi(true);
       } else {
-        if (data.zatenOy) {
-          localStorage.setItem(OY_ANAHTARI, "1");
-          setYeniOy(true);
-        }
+        if (data.zatenOy) setOyVerildi(true);
         setMesaj(data.hata);
       }
     } catch {
@@ -69,7 +63,7 @@ export function VoteButton({
             ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
             : "border-[var(--border)] hover:border-[var(--accent)]"
         }`}
-        title={oyVerildi ? "Oyunuzu kullandınız" : "Oy ver"}
+        title={oyVerildi ? "Oyunu kullandın" : "Beğen"}
       >
         {yukleniyor ? (
           <Loader2 size={15} className="animate-spin" />
@@ -78,7 +72,7 @@ export function VoteButton({
         )}
         {oy}
       </button>
-      {mesaj && <span className="text-[11px] text-[var(--muted)]">{mesaj}</span>}
+      {mesaj && <span className="max-w-[160px] text-right text-[11px] text-[var(--muted)]">{mesaj}</span>}
     </div>
   );
 }

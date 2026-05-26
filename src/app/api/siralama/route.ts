@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { suankiDonem } from "@/lib/utils";
 
 export const revalidate = 0;
 
@@ -27,6 +28,7 @@ export async function GET() {
     .from("onayli_gonderiler")
     .select("id, baslik, yukleyen_ad, gorsel_url, oy_sayisi")
     .eq("contest_id", contest.id)
+    .eq("donem", suankiDonem())
     .order("oy_sayisi", { ascending: false })
     .order("created_at", { ascending: true });
 

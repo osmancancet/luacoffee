@@ -257,10 +257,14 @@ export default function AnaSayfa() {
           <span className="text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
             Fotoğraf Yarışması
           </span>
-          <h2 className="mt-3 font-serif text-3xl sm:text-4xl">Anını paylaş, kazan</h2>
+          <h2 className="mt-3 font-serif text-3xl sm:text-4xl">
+            Lua bardağıyla en güzel kare
+          </h2>
           <p className="mx-auto mt-4 max-w-xl leading-relaxed text-[var(--muted)]">
-            Lua&apos;daki en güzel kareni yükle; onaylandıktan sonra galeride
-            yerini alsın, ziyaretçiler oy versin. En çok oyu toplayan kazanır.
+            Kafemizde Lua bardağıyla çektiğin en güzel fotoğrafı paylaş. Her hesap
+            ayda <strong className="text-[var(--foreground)]">1 fotoğraf</strong> yükler,{" "}
+            <strong className="text-[var(--foreground)]">1 beğeni</strong> verir; ayın
+            en çok beğenilen karesi kazanır. Her ay sıfırlanır.
           </p>
         </Reveal>
 

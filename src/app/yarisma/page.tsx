@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { createServiceClient } from "@/lib/supabase/server";
 import { VoteButton } from "@/components/VoteButton";
 import { Reveal } from "@/components/Reveal";
+import { suankiDonem, donemAdi } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Fotoğraf Yarışması",
@@ -36,12 +37,14 @@ export default async function YarismaSayfasi() {
     .limit(1)
     .single();
 
+  const donem = suankiDonem();
   let gonderiler: Gonderi[] = [];
   if (contest) {
     const { data } = await supabase
       .from("onayli_gonderiler")
       .select("id, baslik, yukleyen_ad, gorsel_url, oy_sayisi")
       .eq("contest_id", contest.id)
+      .eq("donem", donem)
       .order("oy_sayisi", { ascending: false });
     gonderiler = (data as Gonderi[]) ?? [];
   }
@@ -49,12 +52,9 @@ export default async function YarismaSayfasi() {
   return (
     <div className="mx-auto max-w-6xl px-5 py-16 sm:py-24">
       <PageHeader
-        eyebrow="Fotoğraf Yarışması"
-        baslik={contest?.baslik ?? "Fotoğraf Yarışması"}
-        aciklama={
-          contest?.aciklama ??
-          "En sevdiğin kareye oy ver. Her cihaz bir kez oy kullanabilir."
-        }
+        eyebrow={`${donemAdi(donem)} Yarışması`}
+        baslik="Lua Bardağıyla En Güzel Kare"
+        aciklama="Kafemizde Lua bardağıyla çektiğin en güzel fotoğrafı paylaş. Her ay 1 fotoğraf, 1 beğeni; ayın en çok beğenilen karesi kazanır."
       />
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link
@@ -73,7 +73,7 @@ export default async function YarismaSayfasi() {
 
       {gonderiler.length === 0 ? (
         <div className="mt-16 rounded-2xl border border-dashed border-[var(--border)] py-20 text-center text-[var(--muted)]">
-          Henüz onaylanmış fotoğraf yok. İlk katılan sen ol!
+          Bu ay henüz onaylanmış fotoğraf yok. İlk katılan sen ol!
         </div>
       ) : (
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,16 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { suankiDonem } from "@/lib/utils";
 
 const IZINLI_TIPLER = ["image/jpeg", "image/png", "image/webp", "image/heic"];
 const MAKS_BOYUT = 8 * 1024 * 1024; // 8 MB
 
 /**
  * POST /api/submissions
- * Müşterinin fotoğraf yüklemesi. Kayıt 'beklemede' durumunda oluşturulur,
- * admin onayından sonra galeride görünür.
+ * Fotoğraf yükleme (Google girişi gerekir). Kayıt 'beklemede' oluşturulur,
+ * admin onayından sonra galeride görünür. Her hesap aylık 1 fotoğraf yükleyebilir.
  */
 export async function POST(req: NextRequest) {
   try {
+    // Giriş kontrolü
+    const authSb = await createServerSupabase();
+    const {
+      data: { user },
+    } = await authSb.auth.getUser();
+    if (!user) {
+      return NextResponse.json(
+        { hata: "Fotoğraf yüklemek için giriş yapın.", girisGerekli: true },
+        { status: 401 },
+      );
+    }
+
     const form = await req.formData();
     const dosya = form.get("gorsel") as File | null;
     const baslik = (form.get("baslik") as string | null)?.trim() || null;
@@ -51,6 +64,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const donem = suankiDonem();
+
+    // Bu hesap bu ay zaten yükledi mi?
+    const { data: oncekiler } = await supabase
+      .from("submissions")
+      .select("id")
+      .eq("kullanici_id", user.id)
+      .eq("donem", donem)
+      .limit(1);
+    if (oncekiler && oncekiler.length > 0) {
+      return NextResponse.json(
+        { hata: "Bu ay zaten bir fotoğraf yükledin. Gelecek ay tekrar katılabilirsin." },
+        { status: 409 },
+      );
+    }
+
     // Storage'a yükle
     const uzanti = dosya.name.split(".").pop() || "jpg";
     const yol = `${contest.id}/${crypto.randomUUID()}.${uzanti}`;
@@ -74,14 +103,27 @@ export async function POST(req: NextRequest) {
     // Kaydı oluştur (beklemede)
     const { error: insertErr } = await supabase.from("submissions").insert({
       contest_id: contest.id,
+      donem,
+      kullanici_id: user.id,
       baslik,
       aciklama,
-      yukleyen_ad: yukleyenAd,
+      yukleyen_ad:
+        yukleyenAd ??
+        user.user_metadata?.full_name ??
+        user.user_metadata?.name ??
+        null,
       gorsel_url: publicUrl,
       durum: "beklemede",
     });
 
     if (insertErr) {
+      // 23505 = aylık tekil ihlali (yarış koşulu)
+      if (insertErr.code === "23505") {
+        return NextResponse.json(
+          { hata: "Bu ay zaten bir fotoğraf yükledin." },
+          { status: 409 },
+        );
+      }
       return NextResponse.json(
         { hata: "Kayıt oluşturulamadı: " + insertErr.message },
         { status: 500 },
