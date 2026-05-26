@@ -42,6 +42,9 @@ export function SadakatKart() {
   const [ekleniyor, setEkleniyor] = useState(false);
   const [animasyon, setAnimasyon] = useState(false);
   const [tarayiciAcik, setTarayiciAcik] = useState(false);
+  const [kuponlar, setKuponlar] = useState<{ id: string; baslik: string; tip: string }[]>([]);
+  const [dogumAyGun, setDogumAyGun] = useState<string | null>(null);
+  const [dogumInput, setDogumInput] = useState("");
 
   const ekle = params.get("ekle");
   const token = params.get("t");
@@ -101,6 +104,8 @@ export function SadakatKart() {
       }
       setAd(d.ad);
       setKart(d);
+      setKuponlar(d.kuponlar ?? []);
+      setDogumAyGun(d.dogum_ay_gun ?? null);
       setDurum("kart");
       if (ekle && token) {
         await damgaEkle(ekle, token);
@@ -154,6 +159,34 @@ export function SadakatKart() {
       setMesajTipi("hata");
     } finally {
       setKullaniliyor(false);
+    }
+  }
+
+  async function kuponKullan(id: string) {
+    const res = await fetch("/api/kupon/kullan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    if (res.ok) {
+      setKuponlar((k) => k.filter((x) => x.id !== id));
+      setMesaj("Kupon kullanıldı, afiyet olsun! ☕");
+      setMesajTipi("basari");
+    }
+  }
+
+  async function dogumKaydet() {
+    if (!dogumInput) return;
+    const ay_gun = dogumInput.slice(5); // YYYY-MM-DD → MM-DD
+    const res = await fetch("/api/sadakat/dogumgunu", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ay_gun }),
+    });
+    if (res.ok) {
+      setDogumAyGun(ay_gun);
+      setMesaj("Doğum günün kaydedildi 🎂 O gün kahven bizden!");
+      setMesajTipi("basari");
     }
   }
 
@@ -290,6 +323,60 @@ export function SadakatKart() {
           Damga yalnızca Lua Coffee&apos;deyken eklenir.
         </p>
       </div>
+
+      {/* Son 1 kahve hatırlatması */}
+      {kart.damga === kart.hedef - 1 && kart.bedava_hak === 0 && (
+        <p className="rounded-xl border border-[var(--accent)]/40 bg-[var(--accent)]/10 px-4 py-3 text-center text-sm text-[var(--accent)]">
+          🎉 Son 1 kahve! Bir sonraki kahven bedavaya çok yakın.
+        </p>
+      )}
+
+      {/* Kuponlar */}
+      {kuponlar.length > 0 && (
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6">
+          <h3 className="font-serif text-lg">Kuponların</h3>
+          <div className="mt-3 space-y-2">
+            {kuponlar.map((k) => (
+              <div
+                key={k.id}
+                className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5"
+              >
+                <span className="min-w-0 flex-1 text-sm">{k.baslik}</span>
+                <button
+                  onClick={() => kuponKullan(k.id)}
+                  className="shrink-0 rounded-full bg-[var(--accent-strong)] px-4 py-1.5 text-xs font-medium text-black"
+                >
+                  Kullan
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Doğum günü */}
+      {!dogumAyGun && (
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 text-center">
+          <p className="font-serif text-lg">🎂 Doğum gününde kahven bizden</p>
+          <p className="mt-1 text-sm text-[var(--muted)]">
+            Doğum gününü ekle, o gün seni şımartalım.
+          </p>
+          <div className="mt-4 flex items-center justify-center gap-2">
+            <input
+              type="date"
+              value={dogumInput}
+              onChange={(e) => setDogumInput(e.target.value)}
+              className="rounded-xl border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm"
+            />
+            <button
+              onClick={dogumKaydet}
+              className="rounded-full bg-[var(--accent-strong)] px-5 py-2 text-sm font-medium text-black"
+            >
+              Kaydet
+            </button>
+          </div>
+        </div>
+      )}
 
       {kart.bedava_hak > 0 && (
         <div className="rounded-3xl border border-[var(--accent)]/40 bg-gradient-to-br from-[var(--surface-2)] to-[var(--surface)] p-7 text-center">

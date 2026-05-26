@@ -34,6 +34,13 @@ export async function POST() {
 
   if (error) return NextResponse.json({ hata: error.message }, { status: 500 });
 
+  await supabase.from("sadakat_islem").insert({
+    kullanici_id: user.id,
+    ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+    tip: "kullanim",
+    not_: "Bedava kahve kullanıldı",
+  });
+
   return NextResponse.json({
     basarili: true,
     damga: data.damga,

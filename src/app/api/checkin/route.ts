@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { seriHesapla, kazanilanRozetler } from "@/lib/ziyaret";
+import { ziyaretKuponu } from "@/lib/kupon";
 import { mesafeMetre } from "@/lib/sadakat";
 import { site } from "@/lib/site";
 
@@ -104,6 +105,23 @@ export async function POST(req: NextRequest) {
   );
   if (error) return NextResponse.json({ hata: error.message }, { status: 500 });
 
+  const ad = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null;
+
+  // Kilometre taşı kuponu (örn. 10. ziyaret) — tekrar verilmesini unique anahtar engeller
+  let yeniKupon: string | null = null;
+  const km = ziyaretKuponu(toplam);
+  if (km) {
+    const { error: kErr } = await supabase
+      .from("kuponlar")
+      .insert({ kullanici_id: user.id, baslik: km.baslik, tip: "kilometre", anahtar: km.anahtar });
+    if (!kErr) yeniKupon = km.baslik;
+  }
+
+  // İşlem geçmişi
+  await supabase
+    .from("sadakat_islem")
+    .insert({ kullanici_id: user.id, ad, tip: "checkin", adet: 1 });
+
   return NextResponse.json({
     basarili: true,
     seri: yeniSeri,
@@ -111,5 +129,6 @@ export async function POST(req: NextRequest) {
     toplam,
     bugun_yapildi: true,
     rozetler: kazanilanRozetler(yeniSeri, toplam),
+    yeni_kupon: yeniKupon,
   });
 }

@@ -14,7 +14,12 @@ async function girisliKullanici() {
   return user;
 }
 
-/** GET — giriş durumunu + mevcut sadakat kartını döndürür. */
+function bugunAyGun(): string {
+  const d = new Date();
+  return `${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+/** GET — giriş durumu + sadakat kartı + kuponlar + doğum günü. */
 export async function GET() {
   const user = await girisliKullanici();
   if (!user) return NextResponse.json({ girisli: false });
@@ -22,17 +27,45 @@ export async function GET() {
   const supabase = createServiceClient();
   const { data } = await supabase
     .from("sadakat")
-    .select("damga, bedava_hak, toplam_damga")
+    .select("damga, bedava_hak, toplam_damga, dogum_ay_gun, son_dogum_yili")
     .eq("kullanici_id", user.id)
     .maybeSingle();
 
+  // Doğum günü bugünse ve bu yıl ödül verilmediyse → kupon oluştur
+  const ad = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null;
+  const yil = new Date().getFullYear();
+  if (data?.dogum_ay_gun === bugunAyGun() && data?.son_dogum_yili !== yil) {
+    await supabase.from("kuponlar").insert({
+      kullanici_id: user.id,
+      baslik: "🎂 Doğum günün kutlu olsun! Kahven bizden",
+      tip: "dogumgunu",
+      anahtar: `dogum-${yil}`,
+    });
+    await supabase
+      .from("sadakat")
+      .update({ son_dogum_yili: yil })
+      .eq("kullanici_id", user.id);
+    await supabase
+      .from("sadakat_islem")
+      .insert({ kullanici_id: user.id, ad, tip: "kupon", not_: "Doğum günü kuponu" });
+  }
+
+  const { data: kuponlar } = await supabase
+    .from("kuponlar")
+    .select("id, baslik, tip, created_at")
+    .eq("kullanici_id", user.id)
+    .eq("durum", "aktif")
+    .order("created_at", { ascending: false });
+
   return NextResponse.json({
     girisli: true,
-    ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+    ad,
     damga: data?.damga ?? 0,
     bedava_hak: data?.bedava_hak ?? 0,
     toplam_damga: data?.toplam_damga ?? 0,
     hedef: HEDEF_DAMGA,
+    dogum_ay_gun: data?.dogum_ay_gun ?? null,
+    kuponlar: kuponlar ?? [],
   });
 }
 
@@ -117,6 +150,13 @@ export async function POST(req: NextRequest) {
   );
 
   if (error) return NextResponse.json({ hata: error.message }, { status: 500 });
+
+  await supabase.from("sadakat_islem").insert({
+    kullanici_id: user.id,
+    ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+    tip: "damga",
+    adet: n,
+  });
 
   return NextResponse.json({
     basarili: true,

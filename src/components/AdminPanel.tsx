@@ -5,6 +5,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { QrPanel } from "@/components/QrPanel";
 import { SadakatQrPanel } from "@/components/SadakatQrPanel";
+import { SadakatYonetim } from "@/components/SadakatYonetim";
 import { Check, X, LogOut, Loader2, ShieldCheck } from "lucide-react";
 
 type Gonderi = {
@@ -197,6 +198,8 @@ export function AdminPanel() {
           <SadakatQrPanel />
         </aside>
       </div>
+
+      <SadakatYonetim />
     </div>
   );
 }
