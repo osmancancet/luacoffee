@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
-import { tokenGecerli, HEDEF_DAMGA } from "@/lib/sadakat";
+import { tokenGecerli, mesafeMetre, HEDEF_DAMGA } from "@/lib/sadakat";
+import { site } from "@/lib/site";
 
 const COOLDOWN_SN = 60; // aynı kullanıcıdan ardışık eklemeler arası bekleme
 
@@ -45,10 +46,30 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { adet, token } = await req.json();
+  const { adet, token, lat, lng } = await req.json();
   const n = Number(adet);
   if (!tokenGecerli(n, token)) {
     return NextResponse.json({ hata: "Geçersiz veya süresi dolmuş QR." }, { status: 400 });
+  }
+
+  // Konum doğrulaması — QR yalnız kafede okutulabilir (fotoğrafı başka yerde işe yaramaz)
+  const enlem = Number(lat);
+  const boylam = Number(lng);
+  if (!Number.isFinite(enlem) || !Number.isFinite(boylam)) {
+    return NextResponse.json(
+      { hata: "Konum gerekli. Damga eklemek için kafede olmalı ve konum iznini açmalısın." },
+      { status: 400 },
+    );
+  }
+  const uzaklik = mesafeMetre(enlem, boylam, site.konum.enlem, site.konum.boylam);
+  if (uzaklik > site.konum.yaricapMetre) {
+    return NextResponse.json(
+      {
+        hata: "Kafede görünmüyorsun. Damga yalnızca Lua Coffee'deyken eklenebilir.",
+        uzakta: true,
+      },
+      { status: 403 },
+    );
   }
 
   const supabase = createServiceClient();

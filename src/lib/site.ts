@@ -37,6 +37,9 @@ export const site = {
     // Gerçek koordinatlar (Google Maps "Lua Coffee" kaydı).
     enlem: 39.1842943,
     boylam: 27.6066453,
+    // Sadakat QR'ı yalnız bu yarıçap içindeyken okutulabilir (metre).
+    // GPS sapmasına karşı biraz geniş tutuldu; isterseniz daraltabilirsiniz.
+    yaricapMetre: 250,
   },
 
   iletisim: {

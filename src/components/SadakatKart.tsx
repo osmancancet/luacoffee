@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Coffee, Gift, Loader2, Check, LogOut } from "lucide-react";
+import { Coffee, Gift, Loader2, Check, LogOut, QrCode } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { QrTarayici } from "@/components/QrTarayici";
 
 type Kart = {
   damga: number;
@@ -13,6 +15,18 @@ type Kart = {
 };
 
 const VARSAYILAN: Kart = { damga: 0, bedava_hak: 0, toplam_damga: 0, hedef: 5 };
+
+/** Cihazın konumunu alır (kafede olma doğrulaması için). */
+function konumAl(): Promise<{ lat: number; lng: number }> {
+  return new Promise((resolve, reject) => {
+    if (!("geolocation" in navigator)) return reject(new Error("yok"));
+    navigator.geolocation.getCurrentPosition(
+      (p) => resolve({ lat: p.coords.latitude, lng: p.coords.longitude }),
+      (e) => reject(e),
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 },
+    );
+  });
+}
 
 export function SadakatKart() {
   const params = useSearchParams();
@@ -25,9 +39,57 @@ export function SadakatKart() {
   const [mesajTipi, setMesajTipi] = useState<"basari" | "hata">("basari");
   const [kullaniliyor, setKullaniliyor] = useState(false);
   const [girisYukleniyor, setGirisYukleniyor] = useState(false);
+  const [ekleniyor, setEkleniyor] = useState(false);
+  const [animasyon, setAnimasyon] = useState(false);
+  const [tarayiciAcik, setTarayiciAcik] = useState(false);
 
   const ekle = params.get("ekle");
   const token = params.get("t");
+
+  /** Konum alıp damga ekler (hem URL'den hem tarayıcıdan kullanılır). */
+  const damgaEkle = useCallback(async (adet: string | number, tok: string) => {
+    setMesaj(null);
+    setEkleniyor(true);
+    let konum: { lat: number; lng: number };
+    try {
+      konum = await konumAl();
+    } catch {
+      setMesaj(
+        "Konum izni gerekli. Damga eklemek için Lua Coffee'de olmalı ve konumu açmalısın.",
+      );
+      setMesajTipi("hata");
+      setEkleniyor(false);
+      return;
+    }
+    try {
+      const r = await fetch("/api/sadakat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ adet: Number(adet), token: tok, lat: konum.lat, lng: konum.lng }),
+      });
+      const e = await r.json();
+      if (r.ok) {
+        setKart(e);
+        setMesaj(
+          e.yeni_bedava > 0
+            ? `+${e.eklenen} damga! 🎉 ${e.yeni_bedava} bedava kahve kazandın!`
+            : `+${e.eklenen} damga eklendi!`,
+        );
+        setMesajTipi("basari");
+        setAnimasyon(true);
+        setTimeout(() => setAnimasyon(false), 900);
+      } else {
+        if (typeof e.damga === "number") setKart(e);
+        setMesaj(e.hata || "Bir hata oluştu.");
+        setMesajTipi("hata");
+      }
+    } catch {
+      setMesaj("Bağlantı hatası.");
+      setMesajTipi("hata");
+    } finally {
+      setEkleniyor(false);
+    }
+  }, []);
 
   const yukle = useCallback(async () => {
     try {
@@ -38,42 +100,18 @@ export function SadakatKart() {
         return;
       }
       setAd(d.ad);
-
-      if (ekle && token) {
-        // Girişli + QR ile gelindi → damga ekle
-        const r = await fetch("/api/sadakat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ adet: Number(ekle), token }),
-        });
-        const e = await r.json();
-        if (r.ok) {
-          setKart(e);
-          setMesaj(
-            e.yeni_bedava > 0
-              ? `+${e.eklenen} damga! 🎉 ${e.yeni_bedava} bedava kahve kazandın!`
-              : `+${e.eklenen} damga eklendi!`,
-          );
-          setMesajTipi("basari");
-        } else {
-          if (typeof e.damga === "number") setKart(e);
-          setMesaj(e.hata || "Bir hata oluştu.");
-          setMesajTipi("hata");
-        }
-        router.replace("/sadakat");
-      } else {
-        setKart(d);
-      }
+      setKart(d);
       setDurum("kart");
+      if (ekle && token) {
+        await damgaEkle(ekle, token);
+        router.replace("/sadakat");
+      }
     } catch {
-      setMesaj("Bağlantı hatası.");
-      setMesajTipi("hata");
       setDurum("kart");
     }
-  }, [ekle, token, router]);
+  }, [ekle, token, router, damgaEkle]);
 
   useEffect(() => {
-    // İlk yüklemede kartı getir; setState'ler await sonrası (senkron değil).
     // eslint-disable-next-line react-hooks/set-state-in-effect
     yukle();
   }, [yukle]);
@@ -116,6 +154,25 @@ export function SadakatKart() {
       setMesajTipi("hata");
     } finally {
       setKullaniliyor(false);
+    }
+  }
+
+  /** Tarayıcıdan gelen QR metnini çözüp damga ekler. */
+  function tarandi(metin: string) {
+    setTarayiciAcik(false);
+    try {
+      const u = new URL(metin);
+      const a = u.searchParams.get("ekle");
+      const t = u.searchParams.get("t");
+      if (a && t) {
+        damgaEkle(a, t);
+      } else {
+        setMesaj("Bu bir Lua sadakat QR'ı değil.");
+        setMesajTipi("hata");
+      }
+    } catch {
+      setMesaj("QR okunamadı, tekrar dene.");
+      setMesajTipi("hata");
     }
   }
 
@@ -191,16 +248,22 @@ export function SadakatKart() {
         <div className="mt-6 flex items-center justify-center gap-2 sm:gap-3">
           {Array.from({ length: kart.hedef }).map((_, i) => {
             const dolu = i < kart.damga;
-            return (
+            return dolu ? (
               <span
                 key={i}
-                className={`flex h-12 w-12 items-center justify-center rounded-full border transition-colors ${
-                  dolu
-                    ? "border-[var(--accent)] bg-[var(--accent)]/15 text-[var(--accent)]"
-                    : "border-[var(--border)] text-[var(--muted)]/40"
+                style={animasyon ? { animationDelay: `${i * 70}ms` } : undefined}
+                className={`flex h-12 w-12 items-center justify-center rounded-full bg-white ${
+                  animasyon ? "anim-stamp" : ""
                 }`}
               >
-                <Coffee size={20} className={dolu ? "fill-[var(--accent)]/30" : ""} />
+                <Image src="/logo.png" alt="Lua damga" width={34} height={34} className="object-contain" />
+              </span>
+            ) : (
+              <span
+                key={i}
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-[var(--border)] text-[var(--muted)]/40"
+              >
+                <Coffee size={18} />
               </span>
             );
           })}
@@ -209,6 +272,22 @@ export function SadakatKart() {
         <p className="mt-6 text-sm text-[var(--muted)]">
           {kart.hedef - kart.damga} kahve daha →{" "}
           <strong className="text-[var(--foreground)]">1 bedava kahve</strong>
+        </p>
+
+        {/* QR Okut */}
+        <button
+          onClick={() => {
+            setMesaj(null);
+            setTarayiciAcik(true);
+          }}
+          disabled={ekleniyor}
+          className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-105 disabled:opacity-60"
+        >
+          {ekleniyor ? <Loader2 size={16} className="animate-spin" /> : <QrCode size={16} />}
+          Kasadaki QR&apos;ı Okut
+        </button>
+        <p className="mt-2 text-xs text-[var(--muted)]">
+          Damga yalnızca Lua Coffee&apos;deyken eklenir.
         </p>
       </div>
 
@@ -235,6 +314,10 @@ export function SadakatKart() {
       <p className="text-center text-xs text-[var(--muted)]">
         Toplam topladığın damga: {kart.toplam_damga}
       </p>
+
+      {tarayiciAcik && (
+        <QrTarayici onSonuc={tarandi} onKapat={() => setTarayiciAcik(false)} />
+      )}
     </div>
   );
 }
