@@ -48,8 +48,8 @@ export const site = {
     instagram: "https://www.instagram.com/lua_coffee.tr",
     instagramKullanici: "@lua_coffee.tr",
     saatler: [
-      { gun: "Pazartesi – Cuma", saat: "08:00 – 24:00" },
-      { gun: "Cumartesi – Pazar", saat: "09:00 – 01:00" },
+      { gun: "Pazartesi – Cuma", saat: "10:00 – 24:00" },
+      { gun: "Cumartesi – Pazar", saat: "10:00 – 01:00" },
     ] as { gun: string; saat: string }[],
     // Google Maps embed src'i (gerçek "Lua Coffee" kaydı).
     haritaEmbed:
