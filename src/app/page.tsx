@@ -14,6 +14,7 @@ import {
   Check,
   Heart,
   Trophy,
+  Flame,
 } from "lucide-react";
 import { espressoCoffee } from "@/lib/menu";
 import { fiyat } from "@/lib/utils";
@@ -64,6 +65,12 @@ export default function AnaSayfa() {
               className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)]/60 px-4 py-1.5 text-xs text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--foreground)]"
             >
               <Camera size={14} className="text-[var(--accent)]" /> Fotoğraf yarışması
+            </Link>
+            <Link
+              href="/sadakat"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)]/60 px-4 py-1.5 text-xs text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--foreground)]"
+            >
+              <Flame size={14} className="text-orange-400" /> Ziyaret serisi
             </Link>
           </div>
 
@@ -210,9 +217,19 @@ export default function AnaSayfa() {
                 ))}
               </ol>
 
+              <div className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--background)] p-4 text-sm text-[var(--muted)]">
+                <span className="font-medium text-[var(--foreground)]">
+                  <Flame size={14} className="mr-1 inline text-orange-400" />
+                  Check-in & Seri:
+                </span>{" "}
+                Her ziyarette check-in yap, rozet topla ve{" "}
+                <span className="text-[var(--foreground)]">En Çok Ziyaret Edenler</span>{" "}
+                listesinde yerini al.
+              </div>
+
               <Link
                 href="/sadakat"
-                className="group mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-105"
+                className="group mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-105"
               >
                 <LogIn size={16} /> Giriş Yap & Kartını Aç
               </Link>
