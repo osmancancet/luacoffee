@@ -18,7 +18,6 @@ export function JsonLd() {
     logo: `${site.url}/logo.png`,
     servesCuisine: "Coffee",
     priceRange: konum.fiyatAraligi,
-    telephone: iletisim.telefon,
     address: {
       "@type": "PostalAddress",
       streetAddress: konum.sokakAdresi,

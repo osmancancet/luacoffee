@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MapPin, Phone, Clock, AtSign, Mail } from "lucide-react";
+import { MapPin, Clock, AtSign, Mail } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { Reveal } from "@/components/Reveal";
 import { IletisimFormu } from "@/components/IletisimFormu";
@@ -57,32 +57,20 @@ export default function IletisimSayfasi() {
             </div>
           </Reveal>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Reveal delay={140} className="flex items-start gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
-              <Phone className="mt-0.5 shrink-0 text-[var(--accent)]" size={20} />
-              <div>
-                <h3 className="font-serif text-lg">Telefon</h3>
-                <a href={iletisim.telefonHref} className="mt-1 block text-sm text-[var(--muted)] hover:text-[var(--foreground)]">
-                  {iletisim.telefon}
-                </a>
-              </div>
-            </Reveal>
-
-            <Reveal delay={210} className="flex items-start gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
-              <AtSign className="mt-0.5 shrink-0 text-[var(--accent)]" size={20} />
-              <div>
-                <h3 className="font-serif text-lg">Instagram</h3>
-                <a
-                  href={iletisim.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 block text-sm text-[var(--muted)] hover:text-[var(--foreground)]"
-                >
-                  {iletisim.instagramKullanici}
-                </a>
-              </div>
-            </Reveal>
-          </div>
+          <Reveal delay={140} className="flex items-start gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+            <AtSign className="mt-0.5 shrink-0 text-[var(--accent)]" size={20} />
+            <div>
+              <h3 className="font-serif text-lg">Instagram</h3>
+              <a
+                href={iletisim.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 block text-sm text-[var(--muted)] hover:text-[var(--foreground)]"
+              >
+                {iletisim.instagramKullanici}
+              </a>
+            </div>
+          </Reveal>
 
           {/* Harita */}
           <Reveal delay={140} className="overflow-hidden rounded-2xl border border-[var(--border)]">

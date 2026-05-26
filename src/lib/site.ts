@@ -41,9 +41,6 @@ export const site = {
 
   iletisim: {
     adres: "Nihat Danışman Mah. Topçu Sokak No: 9/A, 45500 Soma / Manisa",
-    // Telefon placeholder — gerçek numarayı buraya yazın.
-    telefon: "+90 (000) 000 00 00",
-    telefonHref: "tel:+900000000000",
     eposta: "merhaba@luacoffee.com",
     instagram: "https://www.instagram.com/lua_coffee.tr",
     instagramKullanici: "@lua_coffee.tr",

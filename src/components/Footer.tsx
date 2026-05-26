@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { AtSign, MapPin, Clock, Phone } from "lucide-react";
+import { AtSign, MapPin, Clock } from "lucide-react";
 import { site } from "@/lib/site";
 
 const kesfet = [
@@ -65,10 +65,6 @@ export function Footer() {
             <Clock size={16} className="shrink-0 text-[var(--accent)]" />
             {site.iletisim.saatler[0].saat}
           </p>
-          <a href={site.iletisim.telefonHref} className="flex items-center gap-2 hover:text-[var(--foreground)]">
-            <Phone size={16} className="shrink-0 text-[var(--accent)]" />
-            {site.iletisim.telefon}
-          </a>
           <a
             href={site.iletisim.instagram}
             target="_blank"
