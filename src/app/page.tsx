@@ -8,6 +8,12 @@ import {
   CalendarDays,
   MapPin,
   Clock,
+  LogIn,
+  QrCode,
+  Gift,
+  Check,
+  Heart,
+  Trophy,
 } from "lucide-react";
 import { espressoCoffee } from "@/lib/menu";
 import { fiyat } from "@/lib/utils";
@@ -150,29 +156,132 @@ export default function AnaSayfa() {
         </div>
       </section>
 
-      {/* ===== Yarışma CTA ===== */}
-      <section className="mx-auto max-w-6xl px-5 pb-24">
-        <Reveal className="relative overflow-hidden rounded-3xl border border-[var(--border)] bg-gradient-to-br from-[var(--surface-2)] to-[var(--surface)] px-8 py-16 text-center">
-          <h2 className="font-serif text-3xl sm:text-4xl">Fotoğraf Yarışması</h2>
-          <p className="mx-auto mt-4 max-w-lg leading-relaxed text-[var(--muted)]">
-            Lua&apos;daki anını fotoğrafla, yükle ve oyları topla. QR kodu okut,
-            galeriye katıl, en çok oyu alan kazansın!
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/yarisma/katil"
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-105"
-            >
-              <Camera size={16} /> Yarışmaya Katıl
-            </Link>
-            <Link
-              href="/yarisma"
-              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-6 py-3 text-sm font-medium hover:border-[var(--accent)]"
-            >
-              Galeriyi Gör &amp; Oy Ver
-            </Link>
+      {/* ===== Sadakat ===== */}
+      <section id="sadakat" className="border-y border-[var(--border)] bg-[var(--surface)]/30">
+        <div className="mx-auto max-w-6xl px-5 py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <Reveal>
+              <span className="text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
+                Sadakat
+              </span>
+              <h2 className="mt-3 font-serif text-3xl sm:text-4xl">
+                5 kahveye 1 bedava
+              </h2>
+              <p className="mt-5 leading-relaxed text-[var(--muted)]">
+                Lua Sadakat ile her kahvende damga topla. 5 damga tamamlanınca
+                6. kahve bizden! Google ile giriş yap; kartın hesabına bağlansın,
+                telefon değişse bile damgaların kaybolmasın.
+              </p>
+
+              <ol className="mt-7 space-y-4">
+                {[
+                  { ikon: LogIn, b: "Google ile giriş yap", m: "Sadakat kartın saniyeler içinde hazır." },
+                  { ikon: QrCode, b: "Kasadaki QR'ı okut", m: "Kafedeyken okut; kaç kahve aldıysan o kadar damga." },
+                  { ikon: Gift, b: "6. kahve bedava", m: "5 damga dolunca bedava kahveni kasada kullan." },
+                ].map((s, i) => (
+                  <li key={s.b} className="flex items-start gap-4">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--border)] text-[var(--accent)]">
+                      <s.ikon size={17} />
+                    </span>
+                    <span>
+                      <span className="font-medium">
+                        {i + 1}. {s.b}
+                      </span>
+                      <span className="block text-sm text-[var(--muted)]">{s.m}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+
+              <Link
+                href="/sadakat"
+                className="group mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-105"
+              >
+                <LogIn size={16} /> Giriş Yap & Kartını Aç
+              </Link>
+            </Reveal>
+
+            {/* Damga kartı görseli */}
+            <Reveal delay={120}>
+              <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center">
+                <p className="font-serif text-xl">Lua Sadakat Kartı</p>
+                <p className="mt-1 text-sm text-[var(--muted)]">Her kahve bir damga</p>
+                <div className="mt-7 grid grid-cols-5 gap-3">
+                  {Array.from({ length: 5 }).map((_, i) =>
+                    i < 3 ? (
+                      <span
+                        key={i}
+                        className="flex aspect-square items-center justify-center rounded-full bg-white"
+                      >
+                        <Image src="/logo.png" alt="" width={30} height={30} className="object-contain" />
+                      </span>
+                    ) : (
+                      <span
+                        key={i}
+                        className="flex aspect-square items-center justify-center rounded-full border border-dashed border-[var(--border)] text-[var(--muted)]/40"
+                      >
+                        <Coffee size={16} />
+                      </span>
+                    ),
+                  )}
+                </div>
+                <p className="mt-7 text-sm text-[var(--muted)]">
+                  2 kahve daha → <strong className="text-[var(--foreground)]">bedava kahve</strong>
+                </p>
+              </div>
+            </Reveal>
           </div>
+        </div>
+      </section>
+
+      {/* ===== Yarışma ===== */}
+      <section className="mx-auto max-w-6xl px-5 py-24">
+        <Reveal className="text-center">
+          <span className="text-xs uppercase tracking-[0.25em] text-[var(--muted)]">
+            Fotoğraf Yarışması
+          </span>
+          <h2 className="mt-3 font-serif text-3xl sm:text-4xl">Anını paylaş, kazan</h2>
+          <p className="mx-auto mt-4 max-w-xl leading-relaxed text-[var(--muted)]">
+            Lua&apos;daki en güzel kareni yükle; onaylandıktan sonra galeride
+            yerini alsın, ziyaretçiler oy versin. En çok oyu toplayan kazanır.
+          </p>
         </Reveal>
+
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { ikon: Camera, b: "Fotoğrafını yükle", m: "Lua'daki anını paylaş." },
+            { ikon: Check, b: "Onaylanır", m: "Ekibimiz kısa sürede onaylar." },
+            { ikon: Heart, b: "Oy toplar", m: "Galeride herkes oy verir." },
+            { ikon: Trophy, b: "Kazanan belli olur", m: "En çok oyu alan kazanır." },
+          ].map((s, i) => (
+            <Reveal
+              key={s.b}
+              delay={i * 80}
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 text-center"
+            >
+              <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] text-[var(--accent)]">
+                <s.ikon size={18} />
+              </span>
+              <h3 className="mt-4 font-serif text-lg">{s.b}</h3>
+              <p className="mt-1 text-sm text-[var(--muted)]">{s.m}</p>
+            </Reveal>
+          ))}
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/yarisma/katil"
+            className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-6 py-3 text-sm font-medium text-black transition-transform hover:scale-105"
+          >
+            <Camera size={16} /> Yarışmaya Katıl
+          </Link>
+          <Link
+            href="/yarisma"
+            className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-6 py-3 text-sm font-medium hover:border-[var(--accent)]"
+          >
+            Galeriyi Gör &amp; Oy Ver
+          </Link>
+        </div>
       </section>
 
       {/* ===== Konum teaser ===== */}
