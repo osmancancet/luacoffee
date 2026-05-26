@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
-import { tokenGecerli, mesafeMetre, HEDEF_DAMGA } from "@/lib/sadakat";
+import { tokenGecerli, mesafeMetre, damgaHesapla, HEDEF_DAMGA } from "@/lib/sadakat";
 import { site } from "@/lib/site";
 
 const COOLDOWN_SN = 60; // aynı kullanıcıdan ardışık eklemeler arası bekleme
@@ -96,10 +96,10 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const toplam = (mevcut?.damga ?? 0) + n;
-  const kazanilan = Math.floor(toplam / HEDEF_DAMGA);
-  const yeniDamga = toplam % HEDEF_DAMGA;
-  const yeniBedava = (mevcut?.bedava_hak ?? 0) + kazanilan;
+  const hesap = damgaHesapla(mevcut?.damga ?? 0, n, mevcut?.bedava_hak ?? 0);
+  const yeniDamga = hesap.damga;
+  const kazanilan = hesap.kazanilan;
+  const yeniBedava = hesap.bedava_hak;
   const yeniToplam = (mevcut?.toplam_damga ?? 0) + n;
 
   const { error } = await supabase.from("sadakat").upsert(

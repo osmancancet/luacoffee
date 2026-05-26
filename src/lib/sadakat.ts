@@ -21,6 +21,24 @@ export function tokenGecerli(adet: number, token: string): boolean {
   return damgaToken(adet) === token;
 }
 
+/**
+ * Damga ekleme hesabı (saf fonksiyon — test edilebilir).
+ * 5 damga dolunca 1 bedava kahve; ilerleme 0–4 arası döner.
+ */
+export function damgaHesapla(
+  mevcutDamga: number,
+  ekle: number,
+  oncekiBedava = 0,
+): { damga: number; kazanilan: number; bedava_hak: number } {
+  const toplam = mevcutDamga + ekle;
+  const kazanilan = Math.floor(toplam / HEDEF_DAMGA);
+  return {
+    damga: toplam % HEDEF_DAMGA,
+    kazanilan,
+    bedava_hak: oncekiBedava + kazanilan,
+  };
+}
+
 /** İki koordinat arası mesafe (metre) — Haversine. Konum doğrulaması için. */
 export function mesafeMetre(
   lat1: number,
