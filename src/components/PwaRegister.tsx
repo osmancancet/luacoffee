@@ -33,7 +33,7 @@ export function PwaRegister() {
   if (!promptu || gizli) return null;
 
   return (
-    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-sm items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface-2)]/95 p-3 shadow-xl backdrop-blur sm:left-auto sm:right-4">
+    <div className="fixed inset-x-4 bottom-24 z-[55] mx-auto flex max-w-sm items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface-2)]/95 p-3 shadow-xl backdrop-blur lg:bottom-6 lg:left-auto lg:right-4">
       <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-white">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo.png" alt="Lua" className="h-full w-full object-contain p-1" />

@@ -85,7 +85,7 @@ export default function RootLayout({
         <PwaRegister />
         <Header />
         {/* Mobilde alt sekme çubuğu için boşluk */}
-        <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+        <main className="flex-1">{children}</main>
         <Footer />
         <MobilNav />
         <Analytics />

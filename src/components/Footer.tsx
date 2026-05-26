@@ -19,7 +19,7 @@ const yarismaLinkleri = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-[var(--border)] bg-[var(--surface)]">
+    <footer className="border-t border-[var(--border)] bg-[var(--surface)] pb-20 lg:pb-0">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-4">
         {/* Marka */}
         <div>
