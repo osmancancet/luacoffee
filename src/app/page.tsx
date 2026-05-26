@@ -50,7 +50,24 @@ export default function AnaSayfa() {
           <p className="anim-fade-up delay-3 mt-6 max-w-xl text-lg leading-relaxed text-[var(--muted)]">
             {site.aciklama}
           </p>
-          <div className="anim-fade-up delay-4 mt-10 flex flex-wrap items-center justify-center gap-3">
+
+          {/* Özellik rozetleri: sadakat + yarışma */}
+          <div className="anim-fade-up delay-4 mt-7 flex flex-wrap items-center justify-center gap-2.5">
+            <Link
+              href="/sadakat"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)]/60 px-4 py-1.5 text-xs text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--foreground)]"
+            >
+              <Gift size={14} className="text-[var(--accent)]" /> 5 kahveye 1 bedava
+            </Link>
+            <Link
+              href="/yarisma"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)]/60 px-4 py-1.5 text-xs text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--foreground)]"
+            >
+              <Camera size={14} className="text-[var(--accent)]" /> Fotoğraf yarışması
+            </Link>
+          </div>
+
+          <div className="anim-fade-up delay-5 mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="/menu"
               className="group inline-flex items-center gap-2 rounded-full bg-[var(--accent-strong)] px-7 py-3.5 text-sm font-medium text-black transition-transform hover:scale-105"
