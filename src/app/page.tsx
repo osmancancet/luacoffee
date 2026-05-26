@@ -38,10 +38,7 @@ export default function AnaSayfa() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--background)]/40 via-[var(--background)]/70 to-[var(--background)]" />
 
         <div className="mx-auto flex max-w-6xl flex-col items-center px-5 py-32 text-center sm:py-44">
-          <span className="anim-fade-up delay-1 mb-6 inline-block text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
-            Soma · Üçüncü Nesil Kahve
-          </span>
-          <h1 className="anim-fade-up delay-2 font-serif text-6xl leading-[0.95] sm:text-8xl">
+          <h1 className="anim-fade-up delay-1 font-serif text-6xl leading-[0.95] sm:text-8xl">
             Lua Coffee
           </h1>
           <p className="anim-fade-up delay-3 mt-6 max-w-xl text-lg leading-relaxed text-[var(--muted)]">
