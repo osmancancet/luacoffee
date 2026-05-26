@@ -40,9 +40,11 @@ export default function AnaSayfa() {
           alt=""
           fill
           priority
-          className="anim-zoom -z-10 object-cover opacity-50"
+          className="anim-zoom -z-10 object-cover object-bottom opacity-[0.18] blur-[3px]"
         />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--background)]/40 via-[var(--background)]/70 to-[var(--background)]" />
+        {/* Koyu gradyan + hafif vinyet: arka plan dokusu kalır, yazı net okunur */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[var(--background)]/80 via-[var(--background)]/85 to-[var(--background)]" />
+        <div className="absolute inset-0 -z-10 [background:radial-gradient(ellipse_at_center,transparent_0%,var(--background)_75%)]" />
 
         <div className="mx-auto flex max-w-6xl flex-col items-center px-5 py-32 text-center sm:py-44">
           <h1 className="anim-fade-up delay-1 font-serif text-6xl leading-[0.95] sm:text-8xl">
