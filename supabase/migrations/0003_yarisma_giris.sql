@@ -29,7 +29,9 @@ create unique index if not exists votes_user_donem_uniq
   on public.votes (donem, kullanici_id);
 
 -- ——— view: dönem alanını dahil et ———
-create or replace view public.onayli_gonderiler as
+-- (create or replace kolon sırası değiştiremediği için önce düşürülür)
+drop view if exists public.onayli_gonderiler;
+create view public.onayli_gonderiler as
   select
     s.id,
     s.contest_id,
