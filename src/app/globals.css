@@ -107,6 +107,25 @@ h1, h2, h3, .font-serif {
   }
 }
 
+/* Yukarıdan düşme (hafif sekme ile) */
+@keyframes lua-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-70px);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.anim-drop {
+  animation: lua-drop 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Sadakat damgası basma efekti */
 @keyframes lua-stamp {
   0% {

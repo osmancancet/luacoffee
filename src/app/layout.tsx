@@ -37,11 +37,6 @@ export const metadata: Metadata = {
   authors: [{ name: site.ad }],
   creator: site.ad,
   alternates: { canonical: "/" },
-  icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
-    shortcut: "/logo.png",
-  },
   appleWebApp: {
     capable: true,
     title: "Lua Coffee",

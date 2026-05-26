@@ -47,7 +47,7 @@ export default function AnaSayfa() {
         <div className="absolute inset-0 -z-10 [background:radial-gradient(ellipse_at_center,transparent_0%,var(--background)_75%)]" />
 
         <div className="mx-auto flex max-w-6xl flex-col items-center px-5 py-32 text-center sm:py-44">
-          <h1 className="anim-fade-up delay-1 font-serif text-6xl leading-[0.95] sm:text-8xl">
+          <h1 className="anim-drop font-serif text-6xl leading-[0.95] sm:text-8xl">
             Lua Coffee
           </h1>
           <p className="anim-fade-up delay-3 mt-6 max-w-xl text-lg leading-relaxed text-[var(--muted)]">

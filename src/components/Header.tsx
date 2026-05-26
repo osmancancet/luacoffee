@@ -26,7 +26,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-        <Link href="/" className="group flex items-center gap-2">
+        <Link href="/" className="group anim-drop flex items-center gap-2">
           <span className="relative h-10 w-10 overflow-hidden rounded-full bg-white transition-transform duration-500 group-hover:rotate-[18deg]">
             <Image src="/logo.png" alt="Lua Coffee" fill className="object-contain p-1" />
           </span>
