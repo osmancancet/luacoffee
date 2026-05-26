@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { adCoz } from "@/lib/kullanici";
 import { HEDEF_DAMGA } from "@/lib/sadakat";
 
 /** POST — bir bedava kahve hakkını kullan (giriş gerekir). */
@@ -36,7 +37,7 @@ export async function POST() {
 
   await supabase.from("sadakat_islem").insert({
     kullanici_id: user.id,
-    ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+    ad: adCoz(user),
     tip: "kullanim",
     not_: "Bedava kahve kullanıldı",
   });

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { tokenGecerli, mesafeMetre, damgaHesapla, HEDEF_DAMGA } from "@/lib/sadakat";
 import { bildirimGonder } from "@/lib/push";
+import { adCoz } from "@/lib/kullanici";
 import { site } from "@/lib/site";
 
 const COOLDOWN_SN = 60; // aynı kullanıcıdan ardışık eklemeler arası bekleme
@@ -28,9 +29,15 @@ export async function GET() {
   const supabase = createServiceClient();
   const { data } = await supabase
     .from("sadakat")
-    .select("damga, bedava_hak, toplam_damga, dogum_ay_gun, son_dogum_yili, referans_kodu")
+    .select("damga, bedava_hak, toplam_damga, dogum_ay_gun, son_dogum_yili, referans_kodu, ad")
     .eq("kullanici_id", user.id)
     .maybeSingle();
+
+  // Boş ad'ı gerçek adla doldur
+  if (data && !data.ad) {
+    const cozulen = adCoz(user);
+    if (cozulen) await supabase.from("sadakat").update({ ad: cozulen }).eq("kullanici_id", user.id);
+  }
 
   // Referans kodu yoksa üret
   let referansKodu = data?.referans_kodu as string | undefined;
@@ -39,7 +46,7 @@ export async function GET() {
     await supabase.from("sadakat").upsert(
       {
         kullanici_id: user.id,
-        ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+        ad: adCoz(user),
         eposta: user.email ?? null,
         referans_kodu: referansKodu,
       },
@@ -48,7 +55,7 @@ export async function GET() {
   }
 
   // Doğum günü bugünse ve bu yıl ödül verilmediyse → kupon oluştur
-  const ad = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null;
+  const ad = adCoz(user);
   const yil = new Date().getFullYear();
   if (data?.dogum_ay_gun === bugunAyGun() && data?.son_dogum_yili !== yil) {
     await supabase.from("kuponlar").insert({
@@ -161,7 +168,7 @@ export async function POST(req: NextRequest) {
   const { error } = await supabase.from("sadakat").upsert(
     {
       kullanici_id: user.id,
-      ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+      ad: adCoz(user),
       eposta: user.email ?? null,
       damga: yeniDamga,
       bedava_hak: yeniBedava,
@@ -176,7 +183,7 @@ export async function POST(req: NextRequest) {
 
   await supabase.from("sadakat_islem").insert({
     kullanici_id: user.id,
-    ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+    ad: adCoz(user),
     tip: "damga",
     adet: n,
   });

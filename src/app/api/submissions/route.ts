@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { suankiDonem } from "@/lib/utils";
+import { adCoz } from "@/lib/kullanici";
 
 const IZINLI_TIPLER = ["image/jpeg", "image/png", "image/webp", "image/heic"];
 const MAKS_BOYUT = 8 * 1024 * 1024; // 8 MB
@@ -107,11 +108,7 @@ export async function POST(req: NextRequest) {
       kullanici_id: user.id,
       baslik,
       aciklama,
-      yukleyen_ad:
-        yukleyenAd ??
-        user.user_metadata?.full_name ??
-        user.user_metadata?.name ??
-        null,
+      yukleyen_ad: yukleyenAd ?? adCoz(user),
       gorsel_url: publicUrl,
       durum: "beklemede",
     });

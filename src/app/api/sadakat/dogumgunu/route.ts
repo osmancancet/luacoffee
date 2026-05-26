@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { adCoz } from "@/lib/kullanici";
 
 /** POST { ay_gun: "MM-DD" } — doğum gününü kaydet (doğum günü ikramı için). */
 export async function POST(req: NextRequest) {
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
   const { error } = await supabase.from("sadakat").upsert(
     {
       kullanici_id: user.id,
-      ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+      ad: adCoz(user),
       eposta: user.email ?? null,
       dogum_ay_gun: ay_gun,
       updated_at: new Date().toISOString(),

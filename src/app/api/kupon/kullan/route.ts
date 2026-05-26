@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { adCoz } from "@/lib/kullanici";
 
 /** POST { id } — kuponu kullan (kasada gösterilerek). */
 export async function POST(req: NextRequest) {
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
 
   await supabase.from("sadakat_islem").insert({
     kullanici_id: user.id,
-    ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+    ad: adCoz(user),
     tip: "kupon",
     not_: `Kullanıldı: ${kupon.baslik}`,
   });

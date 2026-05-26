@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { adCoz } from "@/lib/kullanici";
 
 /**
  * POST { kod } — davet kodunu kaydet.
@@ -41,7 +42,7 @@ export async function POST(req: NextRequest) {
   await supabase.from("sadakat").upsert(
     {
       kullanici_id: user.id,
-      ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+      ad: adCoz(user),
       eposta: user.email ?? null,
       davet_eden: davetEden.kullanici_id,
     },

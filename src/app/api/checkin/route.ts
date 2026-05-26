@@ -3,6 +3,7 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { seriHesapla, kazanilanRozetler } from "@/lib/ziyaret";
 import { ziyaretKuponu } from "@/lib/kupon";
 import { mesafeMetre } from "@/lib/sadakat";
+import { adCoz } from "@/lib/kullanici";
 import { site } from "@/lib/site";
 
 async function girisliKullanici() {
@@ -25,9 +26,15 @@ export async function GET() {
   const supabase = createServiceClient();
   const { data } = await supabase
     .from("ziyaretler")
-    .select("seri, en_uzun_seri, toplam, son_tarih")
+    .select("seri, en_uzun_seri, toplam, son_tarih, ad")
     .eq("kullanici_id", user.id)
     .maybeSingle();
+
+  // Eski/boş ad'ı doldur (ör. "Lua Misafiri" yerine gerçek ad)
+  const ad = adCoz(user);
+  if (data && !data.ad && ad) {
+    await supabase.from("ziyaretler").update({ ad }).eq("kullanici_id", user.id);
+  }
 
   const seri = data?.seri ?? 0;
   const toplam = data?.toplam ?? 0;
@@ -94,7 +101,7 @@ export async function POST(req: NextRequest) {
   const { error } = await supabase.from("ziyaretler").upsert(
     {
       kullanici_id: user.id,
-      ad: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+      ad: adCoz(user),
       seri: yeniSeri,
       en_uzun_seri: enUzun,
       toplam,
@@ -105,7 +112,7 @@ export async function POST(req: NextRequest) {
   );
   if (error) return NextResponse.json({ hata: error.message }, { status: 500 });
 
-  const ad = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null;
+  const ad = adCoz(user);
 
   // Kilometre taşı kuponu (örn. 10. ziyaret) — tekrar verilmesini unique anahtar engeller
   let yeniKupon: string | null = null;
