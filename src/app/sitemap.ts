@@ -1,11 +1,15 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
+import { BAKIM_MODU } from "@/lib/bakim";
 
 /**
  * Arama motorları için site haritası → /sitemap.xml
  * Yeni public sayfa eklerken bu listeye ekleyin (admin/api hariç).
  */
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Bakım modunda site haritası boş döner.
+  if (BAKIM_MODU) return [];
+
   const taban = site.url;
   const simdi = new Date();
 

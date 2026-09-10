@@ -7,6 +7,7 @@ import { MobilNav } from "@/components/MobilNav";
 import { JsonLd } from "@/components/JsonLd";
 import { PwaRegister } from "@/components/PwaRegister";
 import { site } from "@/lib/site";
+import { BAKIM_MODU } from "@/lib/bakim";
 import { Analytics } from "@vercel/analytics/next";
 
 export const viewport: Viewport = {
@@ -66,11 +67,13 @@ export const metadata: Metadata = {
     description: "Soma, Manisa'da üçüncü nesil kahve ve yaratıcı atölyeler.",
     images: ["/galeri/dis-cephe-2.webp"],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
-  },
+  robots: BAKIM_MODU
+    ? { index: false, follow: false }
+    : {
+        index: true,
+        follow: true,
+        googleBot: { index: true, follow: true, "max-image-preview": "large" },
+      },
 };
 
 export default function RootLayout({
@@ -81,13 +84,20 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${playfair.variable} flex min-h-screen flex-col antialiased`}
       >
-        <JsonLd />
-        <PwaRegister />
-        <Header />
-        {/* Mobilde alt sekme çubuğu için boşluk */}
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <MobilNav />
+        {BAKIM_MODU ? (
+          /* Bakım modu: hiçbir site öğesi (başlık, altbilgi, menü) gösterilmez. */
+          <main className="flex-1">{children}</main>
+        ) : (
+          <>
+            <JsonLd />
+            <PwaRegister />
+            <Header />
+            {/* Mobilde alt sekme çubuğu için boşluk */}
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <MobilNav />
+          </>
+        )}
         <Analytics />
       </body>
     </html>

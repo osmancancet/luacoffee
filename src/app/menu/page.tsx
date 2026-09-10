@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { espressoCoffee, kategoriler } from "@/lib/menu";
 import { fiyat } from "@/lib/utils";
+import { FIYAT_GOSTER } from "@/lib/bakim";
 import { Reveal } from "@/components/Reveal";
 import { PageHeader } from "@/components/PageHeader";
 
 export const metadata: Metadata = {
   title: "Menü",
-  description:
-    "Lua Coffee menüsü (Soma, Manisa): espresso bazlı kahveler, imza içecekler, sıcak & soğuk seçenekler ve fiyatları.",
+  description: FIYAT_GOSTER
+    ? "Lua Coffee menüsü (Soma, Manisa): espresso bazlı kahveler, imza içecekler, sıcak & soğuk seçenekler ve fiyatları."
+    : "Lua Coffee menüsü (Soma, Manisa): espresso bazlı kahveler, imza içecekler, sıcak & soğuk seçenekler.",
   alternates: { canonical: "/menu" },
 };
 
@@ -17,7 +19,11 @@ export default function MenuSayfasi() {
       <PageHeader
         eyebrow="Menü"
         baslik="Menü"
-        aciklama="Espresso bazlı klasiklerden imza içeceklerimize. Fiyatlar ₺ cinsindendir."
+        aciklama={
+          FIYAT_GOSTER
+            ? "Espresso bazlı klasiklerden imza içeceklerimize. Fiyatlar ₺ cinsindendir."
+            : "Espresso bazlı klasiklerden imza içeceklerimize. Güncel fiyatlar için mekânımızdaki menüye bakabilirsiniz."
+        }
       />
 
       {/* Espresso & Coffee — COLD / HOT */}
@@ -28,31 +34,37 @@ export default function MenuSayfasi() {
         </div>
 
         <div className="overflow-hidden rounded-2xl border border-[var(--border)]">
-          <div className="grid grid-cols-[1fr_auto_auto] gap-x-6 bg-[var(--surface-2)] px-5 py-3 text-xs uppercase tracking-wider text-[var(--muted)]">
-            <span>Ürün</span>
-            <span className="w-14 text-right">Cold</span>
-            <span className="w-14 text-right">Hot</span>
-          </div>
+          {FIYAT_GOSTER && (
+            <div className="grid grid-cols-[1fr_auto_auto] gap-x-6 bg-[var(--surface-2)] px-5 py-3 text-xs uppercase tracking-wider text-[var(--muted)]">
+              <span>Ürün</span>
+              <span className="w-14 text-right">Cold</span>
+              <span className="w-14 text-right">Hot</span>
+            </div>
+          )}
           {espressoCoffee.map((u, i) => (
             <div
               key={u.ad}
-              className={`grid grid-cols-[1fr_auto_auto] gap-x-6 px-5 py-3 ${
-                i % 2 ? "bg-[var(--surface)]/40" : ""
-              }`}
+              className={`${
+                FIYAT_GOSTER ? "grid grid-cols-[1fr_auto_auto] gap-x-6" : "block"
+              } px-5 py-3 ${i % 2 ? "bg-[var(--surface)]/40" : ""}`}
             >
               <span>{u.ad}</span>
-              <span className="w-14 text-right text-sm text-[var(--accent)]">
-                {fiyat(u.cold)}
-              </span>
-              <span className="w-14 text-right text-sm text-[var(--accent)]">
-                {fiyat(u.hot)}
-              </span>
+              {FIYAT_GOSTER && (
+                <>
+                  <span className="w-14 text-right text-sm text-[var(--accent)]">
+                    {fiyat(u.cold)}
+                  </span>
+                  <span className="w-14 text-right text-sm text-[var(--accent)]">
+                    {fiyat(u.hot)}
+                  </span>
+                </>
+              )}
             </div>
           ))}
         </div>
       </Reveal>
 
-      {/* Tek fiyatlı kategoriler */}
+      {/* Diğer kategoriler */}
       <div className="mt-14 grid gap-10 sm:grid-cols-2">
         {kategoriler.map((kat, ki) => (
           <Reveal as="section" key={kat.baslik} delay={ki * 80}>
@@ -72,7 +84,9 @@ export default function MenuSayfasi() {
                   }`}
                 >
                   <span>{u.ad}</span>
-                  <span className="text-sm text-[var(--accent)]">{fiyat(u.fiyat)}</span>
+                  {FIYAT_GOSTER && (
+                    <span className="text-sm text-[var(--accent)]">{fiyat(u.fiyat)}</span>
+                  )}
                 </div>
               ))}
             </div>

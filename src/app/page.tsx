@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { espressoCoffee } from "@/lib/menu";
 import { fiyat, donemAdi } from "@/lib/utils";
+import { FIYAT_GOSTER } from "@/lib/bakim";
 import { site } from "@/lib/site";
 import { createServiceClient } from "@/lib/supabase/server";
 import { Reveal } from "@/components/Reveal";
@@ -214,7 +215,9 @@ export default async function AnaSayfa() {
               className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-4 transition-colors hover:border-[var(--accent)]"
             >
               <span>{u.ad}</span>
-              <span className="text-sm text-[var(--accent)]">{fiyat(u.hot ?? u.cold)}</span>
+              {FIYAT_GOSTER && (
+                <span className="text-sm text-[var(--accent)]">{fiyat(u.hot ?? u.cold)}</span>
+              )}
             </Reveal>
           ))}
         </div>
